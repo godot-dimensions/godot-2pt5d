@@ -2,6 +2,7 @@
 *.gen.*
 .import/
 .godot/
+/android/
 /gen/
 
 # General C++ generated files

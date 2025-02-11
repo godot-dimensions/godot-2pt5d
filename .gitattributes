@@ -1,7 +1,7 @@
 # Properly detect languages on Github
 *.h linguist-language=cpp
 
-# Normalize EOL for all files that Git considers text files
+# Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
 
 # Only include the compiled addon when downloading from the Asset Library.
