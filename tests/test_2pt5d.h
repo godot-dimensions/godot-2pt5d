@@ -1,3 +1,3 @@
 #pragma once
 
-#define GODOT_MODULE
+#define GODOT_MODULE 1

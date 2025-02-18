@@ -27,6 +27,8 @@ using namespace godot;
 #define MODULE_OVERRIDE override
 
 #define MOUSE_BUTTON_LEFT MouseButton::LEFT
+#else
+#error "Must build as Godot GDExtension or Godot module."
 #endif
 
 #ifndef _NO_DISCARD_
