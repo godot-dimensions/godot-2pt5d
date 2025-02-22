@@ -11,6 +11,20 @@
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="calculate_2d_rotation" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="y_axis_up" type="Vector3" />
+			<description>
+				Given the +Y axis (local up) of a 3D transform from a [Node25D], returns the 2D rotation in radians.
+			</description>
+		</method>
+		<method name="calculate_draw_order" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="vector3" type="Vector3" />
+			<description>
+				Given a 3D position, returns the draw order for 2.5D objects. Objects further along this vector will be shown in the foreground. This is also known as depth sorting, or the Z-index. See [member CanvasItem.z_index] for more information.
+			</description>
+		</method>
 		<method name="from_custom" qualifiers="static">
 			<return type="World25D" />
 			<param index="0" name="basis" type="Basis" />
@@ -25,6 +39,20 @@
 			<param index="2" name="angle_z" type="float" />
 			<description>
 				Returns a new [World25D] with the basis set to a predefined value based on the preset.
+			</description>
+		</method>
+		<method name="xform_3d_to_2d" qualifiers="const">
+			<return type="Vector2" />
+			<param index="0" name="vector3" type="Vector3" />
+			<description>
+				Transforms a 3D position into a 2D position for rendering in the 2D canvas.
+			</description>
+		</method>
+		<method name="xform_inv_2d_to_3d" qualifiers="const">
+			<return type="Vector3" />
+			<param index="0" name="vector2" type="Vector2" />
+			<description>
+				Inverse-transforms a 2D position into a 3D position. This is locked to a plane that intersects the origin, and is not a full inverse transform, however it is useful as an intermediate step for some transform operations.
 			</description>
 		</method>
 	</methods>
@@ -56,5 +84,15 @@
 		<member name="is_main_world" type="bool" setter="set_is_main_world" getter="get_is_main_world" default="false">
 			If [code]true[/code], this [World25D] will stay used on this node regardless of any ancestor [World25D] resources. By default, the first [World25D] resource in the scene is used as the world, ensuring that prefabs and other sub-scenes like player characters use the world of the scene they are instanced in instead of making their own. This usually should be left at the default, but can be enabled if you want to have multiple 2.5D worlds loaded at once.
 		</member>
+		<member name="pixels_per_meter" type="float" setter="set_pixels_per_meter" getter="get_pixels_per_meter" default="64.0">
+			The amount of pixels in 2D that correspond to one meter in 3D. This is used for scaling 3D coordinates into 2D coordinates for rendering 2.5D objects in the 2D canvas.
+		</member>
 	</members>
+	<signals>
+		<signal name="basis_changed">
+			<description>
+				Emitted when the [member basis] of the world changes, or [member pixels_per_meter] changes, both of which affect how 3D positions are converted into 2D positions for rendering in the 2D canvas.
+			</description>
+		</signal>
+	</signals>
 </class>

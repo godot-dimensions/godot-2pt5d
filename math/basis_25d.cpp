@@ -12,14 +12,59 @@ void Basis25D::set_axis(const int p_axis, const Vector2 &p_axis_vec) {
 	coord[p_axis] = p_axis_vec;
 }
 
+Vector3 Basis25D::get_row(const int p_row) const {
+	ERR_FAIL_INDEX_V(p_row, 3, Vector3());
+	switch (p_row) {
+		case 0:
+			return Vector3(x.x, y.x, z.x);
+		case 1:
+			return Vector3(x.y, y.y, z.y);
+	}
+	return draw_order;
+}
+
+void Basis25D::set_row(const int p_row, const Vector3 &p_row_vec) {
+	ERR_FAIL_INDEX(p_row, 3);
+	switch (p_row) {
+		case 0:
+			x.x = p_row_vec.x;
+			y.x = p_row_vec.y;
+			z.x = p_row_vec.z;
+			break;
+		case 1:
+			x.y = p_row_vec.x;
+			y.y = p_row_vec.y;
+			z.y = p_row_vec.z;
+			break;
+		case 2:
+			draw_order = p_row_vec;
+			break;
+	}
+}
+
 // Math.
+
+real_t Basis25D::calculate_2d_rotation(const Vector3 &p_y_axis_up) const {
+	const Vector2 local_y = xform_3d_to_2d(p_y_axis_up);
+	if (local_y.is_zero_approx()) {
+		return 0.0;
+	}
+	// Note: This is intentionally passing `y = y.x` and `x = -y.y` to atan2.
+	// The default rotation is +Y up in 3D, but 2D rotation has 0.0 on the right.
+	return Math::atan2(local_y.x, -local_y.y);
+}
 
 real_t Basis25D::calculate_draw_order(const Vector3 &p_vector3) const {
 	return draw_order.dot(p_vector3);
 }
 
-Vector2 Basis25D::xform(const Vector3 &p_vector3) const {
+Vector2 Basis25D::xform_3d_to_2d(const Vector3 &p_vector3) const {
 	return x * p_vector3.x + y * p_vector3.y + z * p_vector3.z;
+}
+
+Vector3 Basis25D::xform_inv_2d_to_3d(const Vector2 &p_vector2) const {
+	Vector3 xform_transpose = get_row(0) * p_vector2.x + get_row(1) * p_vector2.y;
+	return xform_transpose.slide(draw_order);
 }
 
 bool Basis25D::is_equal_approx(const Basis25D &p_b) const {
@@ -27,11 +72,7 @@ bool Basis25D::is_equal_approx(const Basis25D &p_b) const {
 }
 
 Basis25D::operator String() const {
-	String s = "[X: " + x + ", Y: " + y + ", Z: " + z;
-	if (draw_order != Basis25D_DEFAULT_DRAW_ORDER) {
-		s += ", DO: " + draw_order;
-	}
-	return s + "]";
+	return String("[X: ") + x + ", Y: " + y + ", Z: " + z + ", DO: " + draw_order + "]";
 }
 
 Basis25D::operator Basis() const {
@@ -46,6 +87,9 @@ Basis25D::operator Transform2D() const {
 
 // This is both sqrt(3)/2 and also cos(tau/12) or cos(30 deg).
 #define Math_SQRT3_OVER_2 0.86602540378443864676372317
+// This is sqrt(1/3) following the convention of Math_SQRT12.
+#define Math_SQRT13 0.57735026918962576450914878
+#define AXONOMETRIC_DRAW_ORDER Vector3(Math_SQRT13, Math_SQRT13, Math_SQRT13)
 
 Basis25D Basis25D::from_preset(const Preset p_preset, const real_t p_angle, const real_t p_angle_z) {
 	// Note: All of these include a flip to match Godot's +Y-down 2D coordinate system.
@@ -54,21 +98,21 @@ Basis25D Basis25D::from_preset(const Preset p_preset, const real_t p_angle, cons
 		case PRESET_FROM_ANGLE: {
 			const real_t sine = Math::sin(p_angle);
 			const real_t cosine = Math::cos(p_angle);
-			return Basis25D(Vector2(0, 1), Vector2(0, -cosine), Vector2(0, sine), Vector3(CMP_EPSILON, sine, cosine));
+			return Basis25D(Vector2(1, 0), Vector2(0, -cosine), Vector2(0, sine), Vector3(CMP_EPSILON, sine, cosine));
 		}
 		case PRESET_ISOMETRIC:
-			return Basis25D(Vector2(Math_SQRT3_OVER_2, 0.5), Vector2(0, -1), Vector2(-Math_SQRT3_OVER_2, 0.5));
+			return Basis25D(Vector2(Math_SQRT3_OVER_2, 0.5), Vector2(0, -1), Vector2(-Math_SQRT3_OVER_2, 0.5), AXONOMETRIC_DRAW_ORDER);
 		case PRESET_DIMETRIC: {
 			const real_t sine = Math::sin(p_angle);
 			const real_t cosine = Math::cos(p_angle);
-			return Basis25D(Vector2(cosine, sine), Vector2(0, -1), Vector2(-cosine, sine));
+			return Basis25D(Vector2(cosine, sine), Vector2(0, -1), Vector2(-cosine, sine), AXONOMETRIC_DRAW_ORDER);
 		}
 		case PRESET_TRIMETRIC: {
 			const real_t sine = Math::sin(p_angle);
 			const real_t cosine = Math::cos(p_angle);
 			const real_t sine_z = Math::sin(p_angle_z);
 			const real_t cosine_z = Math::cos(p_angle_z);
-			return Basis25D(Vector2(cosine, sine), Vector2(0, -1), Vector2(-cosine_z, sine_z));
+			return Basis25D(Vector2(cosine, sine), Vector2(0, -1), Vector2(-cosine_z, sine_z), AXONOMETRIC_DRAW_ORDER);
 		}
 		case PRESET_OBLIQUE_X:
 			return Basis25D(Vector2(Math_SQRT12, Math_SQRT12), Vector2(0, -1), Vector2(-1, 0), Vector3(1, 0, 0));
@@ -97,6 +141,7 @@ Basis25D::Basis25D() {
 	x = Vector2(1, 0);
 	y = Vector2(0, -Math_SQRT12);
 	z = Vector2(0, Math_SQRT12);
+	draw_order = Vector3(CMP_EPSILON, Math_SQRT12, Math_SQRT12);
 }
 
 Basis25D::Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, const Vector3 &p_draw_order) {

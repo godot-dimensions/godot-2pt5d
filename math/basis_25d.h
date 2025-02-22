@@ -2,9 +2,6 @@
 
 #include "../godot_2pt5d_defines.h"
 
-#define Math_SQRT13 0.57735026918962576450914878
-#define Basis25D_DEFAULT_DRAW_ORDER Vector3(Math_SQRT13, Math_SQRT13, Math_SQRT13)
-
 struct _NO_DISCARD_ Basis25D {
 	union {
 		struct {
@@ -15,7 +12,7 @@ struct _NO_DISCARD_ Basis25D {
 
 		Vector2 coord[3];
 	};
-	Vector3 draw_order = Basis25D_DEFAULT_DRAW_ORDER;
+	Vector3 draw_order;
 
 	enum Preset {
 		PRESET_CUSTOM,
@@ -45,10 +42,14 @@ struct _NO_DISCARD_ Basis25D {
 	}
 	Vector2 get_axis(const int p_axis) const;
 	void set_axis(const int p_axis, const Vector2 &p_axis_vec);
+	Vector3 get_row(const int p_row) const;
+	void set_row(const int p_row, const Vector3 &p_row_vec);
 
 	// Math.
+	real_t calculate_2d_rotation(const Vector3 &p_y_axis_up) const;
 	real_t calculate_draw_order(const Vector3 &p_vector3) const;
-	Vector2 xform(const Vector3 &p_vector3) const;
+	Vector2 xform_3d_to_2d(const Vector3 &p_vector3) const;
+	Vector3 xform_inv_2d_to_3d(const Vector2 &p_vector2) const;
 
 	bool is_equal_approx(const Basis25D &p_b) const;
 	operator String() const;
@@ -64,7 +65,7 @@ struct _NO_DISCARD_ Basis25D {
 	// Constructors.
 	static Basis25D from_preset(const Preset p_preset = PRESET_FROM_ANGLE, const real_t p_angle = Math_TAU / 8.0, const real_t p_angle_z = Math_TAU / 16.0);
 	Basis25D();
-	Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, const Vector3 &p_draw_order = Basis25D_DEFAULT_DRAW_ORDER);
+	Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, const Vector3 &p_draw_order);
 	Basis25D(const Basis25D &p_b);
 	Basis25D(const Basis &p_b);
 	Basis25D(const Transform2D &p_t);
