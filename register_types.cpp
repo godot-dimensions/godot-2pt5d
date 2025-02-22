@@ -6,6 +6,7 @@
 #include "core/config/engine.h"
 #endif
 
+#include "math/world_25d.h"
 #include "nodes/node_25d.h"
 
 inline void add_godot_singleton(const StringName &p_singleton_name, Object *p_object) {
@@ -25,7 +26,9 @@ inline void remove_godot_singleton(const StringName &p_singleton_name) {
 }
 
 void initialize_2pt5d_module(ModuleInitializationLevel p_level) {
-	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_level == MODULE_INITIALIZATION_LEVEL_CORE) {
+		GDREGISTER_CLASS(World25D);
+	} else if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		// Register node classes here.
 		// You can add singletons using add_godot_singleton().
 		GDREGISTER_CLASS(Node25D);

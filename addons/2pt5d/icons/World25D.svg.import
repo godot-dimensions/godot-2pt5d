@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kiuw1n0q4ba6"
-path="res://.godot/imported/Node25D.svg-12839a497b4a4d262170a1a364d93b34.ctex"
+uid="uid://c5a5jpbrlbu5l"
+path="res://.godot/imported/World25D.svg-dd2fe770e7306cdc8ff442d5f5490169.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/2pt5d/icons/Node25D.svg"
-dest_files=["res://.godot/imported/Node25D.svg-12839a497b4a4d262170a1a364d93b34.ctex"]
+source_file="res://addons/2pt5d/icons/World25D.svg"
+dest_files=["res://.godot/imported/World25D.svg-dd2fe770e7306cdc8ff442d5f5490169.ctex"]
 
 [params]
 

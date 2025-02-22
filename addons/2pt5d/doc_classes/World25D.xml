@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="World25D" inherits="Resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		Context for converting 3D coordinates into 2D for rendering in the 2D canvas.
+	</brief_description>
+	<description>
+		World25D provides a 2.5-dimensional basis that converts 3D coordinates into 2D coordinates for rendering in the 2D canvas. It is used by [Node25D] and its subclasses, usually only one per scene.
+		The basis is a 2-row 3-column matrix of three [Vector2] values, plus a [Vector3] row at the bottom for the draw order. This is packed into a [Basis] for serializing and exposing via [Variant], but there are also individual [Vector2] members for each column of the basis. However, instead of setting the basis manually, you may wish to use one of the presets, which will set the basis to a predefined value, or a class of values calculated from the angle properties.
+		[b]Note:[/b] If you are looking for the other type of 2.5D, with 3D graphics but 2D transforms, simply use [Node3D] instead and lock the Z axis to zero. That type does not require a new class to accomplish.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="from_custom" qualifiers="static">
+			<return type="World25D" />
+			<param index="0" name="basis" type="Basis" />
+			<description>
+				Returns a new [World25D] with the basis set to a custom value.
+			</description>
+		</method>
+		<method name="from_preset" qualifiers="static">
+			<return type="World25D" />
+			<param index="0" name="preset" type="int" enum="Basis25D.Preset" />
+			<param index="1" name="angle" type="float" />
+			<param index="2" name="angle_z" type="float" />
+			<description>
+				Returns a new [World25D] with the basis set to a predefined value based on the preset.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="basis" type="Basis" setter="set_basis" getter="get_basis">
+			The 2.5D basis for converting 3D coordinates into 2D coordinates for rendering in the 2D canvas. This is packed into a [Basis] for serializing and exposing via [Variant], but is actually a 2-row 3-column matrix of three [Vector2] values, plus a [Vector3] row at the bottom for the draw order.
+		</member>
+		<member name="basis_angle" type="float" setter="set_basis_angle" getter="get_basis_angle" default="0.785398">
+			The primary angle used by some 2.5D basis presets. This is used by "From Angle" for the angle in the YZ plane, by "Dimetric" for the angle between X/Z and the horizontal, and by "Trimetric" for the angle between X and the horizontal. This is in radians.
+		</member>
+		<member name="basis_angle_z" type="float" setter="set_basis_angle_z" getter="get_basis_angle_z">
+			The secondary angle used by the "Trimetric" 2.5D basis preset as the angle between the Z axis and the horizontal. This is in radians.
+		</member>
+		<member name="basis_draw_order" type="Vector3" setter="set_basis_draw_order" getter="get_basis_draw_order">
+			The [Vector3] that determines the draw order of 2.5D objects. Objects further along this vector will be shown in the foreground. This is also known as depth sorting, or the Z-index. See [member CanvasItem.z_index] for more information.
+		</member>
+		<member name="basis_preset" type="int" setter="set_basis_preset" getter="get_basis_preset" enum="Basis25D.Preset" default="1">
+			The preset for the 2.5D basis. This will set the [member basis] to a predefined value, which can be useful for setting up a 2.5D world quickly without needing to manually set the basis. You can also set this to "Custom" if you want to set the basis manually.
+		</member>
+		<member name="basis_x" type="Vector2" setter="set_basis_x" getter="get_basis_x">
+			The X column of the 2.5D basis. This is the direction the 3D X axis gets mapped to in 2D space. Note that since +Y is down in Godot's 2D, the Y component of this vector is flipped compared to 3D-to-3D basis vectors.
+		</member>
+		<member name="basis_y" type="Vector2" setter="set_basis_y" getter="get_basis_y">
+			The Y column of the 2.5D basis. This is the direction the 3D Y axis gets mapped to in 2D space. Note that since +Y is down in Godot's 2D, the Y component of this vector is flipped compared to 3D-to-3D basis vectors.
+		</member>
+		<member name="basis_z" type="Vector2" setter="set_basis_z" getter="get_basis_z">
+			The Z column of the 2.5D basis. This is the direction the 3D Z axis gets mapped to in 2D space. Note that since +Y is down in Godot's 2D, the Y component of this vector is flipped compared to 3D-to-3D basis vectors.
+		</member>
+		<member name="is_main_world" type="bool" setter="set_is_main_world" getter="get_is_main_world" default="false">
+			If [code]true[/code], this [World25D] will stay used on this node regardless of any ancestor [World25D] resources. By default, the first [World25D] resource in the scene is used as the world, ensuring that prefabs and other sub-scenes like player characters use the world of the scene they are instanced in instead of making their own. This usually should be left at the default, but can be enabled if you want to have multiple 2.5D worlds loaded at once.
+		</member>
+	</members>
+</class>

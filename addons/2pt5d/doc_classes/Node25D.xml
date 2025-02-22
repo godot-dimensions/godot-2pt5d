@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <class name="Node25D" inherits="CanvasItem" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
+		2.5-dimensional node, inherited by all 2.5D nodes.
 	</brief_description>
 	<description>
+		Node25D is the base class for all 2.5-dimensional nodes. For the purposes of this class, "2.5D" refers to objects that have transform math done in 3D space, including a 3D position, but are rendered in 2D as a [CanvasItem].
+		[b]Note:[/b] If you are looking for the other type of 2.5D, with 3D graphics but 2D transforms, simply use [Node3D] instead and lock the Z axis to zero. That type does not require a new node class to accomplish.
 	</description>
 	<tutorials>
 	</tutorials>
+	<members>
+		<member name="world" type="World25D" setter="set_world" getter="get_world">
+			The [World25D] context in which the node exists. It contains a 2.5D basis for converting 3D coordinates into 2D coordinates for rendering in the 2D canvas.
+		</member>
+	</members>
 </class>

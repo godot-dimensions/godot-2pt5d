@@ -2,6 +2,8 @@
 
 #include "../godot_2pt5d_defines.h"
 
+#include "../math/world_25d.h"
+
 #if GDEXTENSION
 #include <godot_cpp/classes/node2d.hpp>
 
@@ -17,9 +19,15 @@ class Node25D : public CanvasItem {
 #else
 #error "Must build as Godot GDExtension or Godot module."
 #endif
+	Ref<World25D> _world;
+
+	void _find_or_make_world();
+	void _give_main_world_to_viewport();
 
 protected:
 	static void _bind_methods();
+	void _notification(int p_what);
+	void _get_property_list(List<PropertyInfo> *p_list) const;
 
 public:
 #ifdef TOOLS_ENABLED
@@ -38,5 +46,9 @@ public:
 
 	virtual void _edit_set_rect(const Rect2 &p_edit_rect) MODULE_OVERRIDE;
 #endif
+
 	Transform2D get_transform() const MODULE_OVERRIDE;
+
+	Ref<World25D> get_world() const { return _world; }
+	void set_world(const Ref<World25D> &p_world) { _world = p_world; }
 };

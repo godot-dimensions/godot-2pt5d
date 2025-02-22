@@ -26,3 +26,4 @@ ios.release = "bin/libgodot_2pt5d.ios.release.universal.dylib"
 [icons]
 
 Node25D = "icons/Node25D.svg"
+World25D = "icons/World25D.svg"

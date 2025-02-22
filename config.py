@@ -10,6 +10,7 @@ def configure(env):
 def get_doc_classes():
 	return [
 		"Node25D",
+		"World25D",
 	]
 
 
