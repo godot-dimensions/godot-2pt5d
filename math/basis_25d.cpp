@@ -121,9 +121,9 @@ Basis25D Basis25D::from_preset(const Preset p_preset, const real_t p_angle, cons
 		case PRESET_OBLIQUE_Z:
 			return Basis25D(Vector2(1, 0), Vector2(0, -1), Vector2(-Math_SQRT12, Math_SQRT12), Vector3(0, 0, 1));
 		case PRESET_FROM_POS_X:
-			return Basis25D(Vector2(0, 0), Vector2(0, -1), Vector2(1, 0), Vector3(1, 0, 0));
+			return Basis25D(Vector2(0, 0), Vector2(0, -1), Vector2(-1, 0), Vector3(1, 0, 0));
 		case PRESET_FROM_NEG_X:
-			return Basis25D(Vector2(0, 0), Vector2(0, -1), Vector2(-1, 0), Vector3(-1, 0, 0));
+			return Basis25D(Vector2(0, 0), Vector2(0, -1), Vector2(1, 0), Vector3(-1, 0, 0));
 		case PRESET_FROM_POS_Y:
 			return Basis25D(Vector2(1, 0), Vector2(0, 0), Vector2(0, 1), Vector3(0, 1, 0));
 		case PRESET_FROM_NEG_Y:
@@ -155,6 +155,7 @@ Basis25D::Basis25D(const Basis25D &p_b) {
 	x = p_b.x;
 	y = p_b.y;
 	z = p_b.z;
+	draw_order = p_b.draw_order;
 }
 
 Basis25D::Basis25D(const Basis &p_b) {
