@@ -9,9 +9,15 @@ void EditorInputSurface25D::GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_event) {
 	if (mouse_button.is_valid()) {
 		MouseButton mouse_button_index = mouse_button->get_button_index();
 		if (mouse_button_index == MOUSE_BUTTON_WHEEL_UP) {
-			_editor_main_viewport->navigation_change_zoom(1.0 / 1.15);
+			if (mouse_button->is_pressed()) {
+				const Vector2 mouse_offset = get_local_mouse_position() - get_size() / 2.0f;
+				_editor_main_viewport->navigation_change_zoom_level(1, mouse_offset);
+			}
 		} else if (mouse_button_index == MOUSE_BUTTON_WHEEL_DOWN) {
-			_editor_main_viewport->navigation_change_zoom(1.15);
+			if (mouse_button->is_pressed()) {
+				const Vector2 mouse_offset = get_local_mouse_position() - get_size() / 2.0f;
+				_editor_main_viewport->navigation_change_zoom_level(-1, mouse_offset);
+			}
 		} else {
 			_editor_main_viewport->viewport_mouse_input(mouse_button);
 		}

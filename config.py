@@ -9,6 +9,7 @@ def configure(env):
 
 def get_doc_classes():
 	return [
+		"Camera25D",
 		"Node25D",
 		"World25D",
 	]

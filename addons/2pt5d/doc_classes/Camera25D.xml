@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Camera25D" inherits="Node25D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		2.5-dimensional camera node, used to render 2.5D scenes.
+	</brief_description>
+	<description>
+		Camera25D is a camera node for 2.5D scenes. It has a 2.5D transform like a [Node25D], and uses a [Camera2D] for rendering.
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_camera_2d" qualifiers="const">
+			<return type="Camera2D" />
+			<description>
+				Returns the internal [Camera2D] used by this [Camera25D]. This is an internal node; freeing it may cause a crash.
+			</description>
+		</method>
+		<method name="make_current">
+			<return type="void" />
+			<description>
+				Forces this [Camera25D] to become the current active one, overriding any other [Camera25D] or [Camera2D].
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="is_enabled" type="bool" setter="set_is_enabled" getter="get_is_enabled" default="true">
+			Controls whether the camera can be active or not. If [code]true[/code], the [Camera25D] will become the main camera when it enters the scene tree and there is no active [Camera25D] or [Camera2D] currently (see [method Viewport.get_camera_2d]).
+			When the camera is currently active and [member is_enabled] is set to [code]false[/code], the next enabled [Camera25D] or [Camera2D] in the scene tree will become active.
+			The active [Camera25D] shares the same state as [Camera2D] nodes. Only one [Camera25D] or [Camera2D] can be active at a time to render the 2D scene.
+		</member>
+		<member name="zoom" type="Vector2" setter="set_zoom" getter="get_zoom" default="Vector2(1, 1)">
+			The camera's zoom. A zoom of [code]Vector(2, 2)[/code] doubles the size seen in the viewport. A zoom of [code]Vector(0.5, 0.5)[/code] halves the size seen in the viewport. This is a wrapper for [member Camera2D.zoom].
+		</member>
+	</members>
+</class>

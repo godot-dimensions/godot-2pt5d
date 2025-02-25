@@ -32,6 +32,9 @@ void EditorMainViewport25D::_notification(int p_what) {
 		case NOTIFICATION_ENTER_TREE: {
 			_update_theme();
 		} break;
+		case NOTIFICATION_READY: {
+			_camera_2pt5d->make_current();
+		} break;
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_theme();
 		} break;
@@ -95,12 +98,27 @@ void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p
 }
 
 void EditorMainViewport25D::navigation_pan(const Ref<InputEventMouseMotion> &p_input_event) {
-	//Vector2 relative = _get_warped_mouse_motion(p_input_event);
-	// TODO: Pan the camera.
+	const Vector2 relative = _get_warped_mouse_motion(p_input_event);
+	_camera_2pt5d->global_translate_2d(-relative / _camera_2pt5d->get_zoom());
 }
 
-void EditorMainViewport25D::navigation_change_zoom(const double p_zoom_change) {
-	// TODO: Zoom the camera and call set_information_text.
+void EditorMainViewport25D::navigation_change_zoom_level(const int p_zoom_level_change, const Vector2 &p_mouse_offset) {
+	_zoom_level += p_zoom_level_change;
+	constexpr double TWELFTH_ROOT_OF_TWO = 1.05946309435929526456;
+	const double zoom = Math::pow(TWELFTH_ROOT_OF_TWO, _zoom_level);
+	const Vector2 prev_zoom = _camera_2pt5d->get_zoom();
+	const Vector2 new_zoom = Vector2(zoom, zoom);
+	_camera_2pt5d->set_zoom(new_zoom);
+	// Pan the camera to keep the mouse position in the same world position.
+	if (!p_mouse_offset.is_zero_approx()) {
+		const Vector2 view_offset = p_mouse_offset / prev_zoom - p_mouse_offset / new_zoom;
+		_camera_2pt5d->global_translate_2d(view_offset);
+	}
+	emit_signal("zoom_amount_changed", zoom);
+}
+
+void EditorMainViewport25D::navigation_reset_zoom_level() {
+	EditorMainViewport25D::navigation_change_zoom_level(-_zoom_level);
 }
 
 void EditorMainViewport25D::viewport_mouse_input(const Ref<InputEventMouse> &p_mouse_event) {
@@ -134,6 +152,10 @@ EditorMainViewport25D::EditorMainViewport25D() {
 	_sub_viewport = memnew(SubViewport);
 	_sub_viewport_container->add_child(_sub_viewport);
 
+	// Set up the 2.5D camera.
+	_camera_2pt5d = memnew(Camera25D);
+	_sub_viewport->add_child(_camera_2pt5d);
+
 	// Set up the input surface and viewport rotation gizmo.
 	_input_surface_2pt5d = memnew(EditorInputSurface25D);
 	_input_surface_2pt5d->set_editor_main_viewport(this);
@@ -142,4 +164,8 @@ EditorMainViewport25D::EditorMainViewport25D() {
 	_viewport_rotation_2pt5d = memnew(EditorViewportRotation25D);
 	_viewport_rotation_2pt5d->set_editor_main_viewport(this);
 	_input_surface_2pt5d->add_child(_viewport_rotation_2pt5d);
+}
+
+void EditorMainViewport25D::_bind_methods() {
+	ADD_SIGNAL(MethodInfo("zoom_amount_changed", PropertyInfo(Variant::FLOAT, "zoom_amount")));
 }

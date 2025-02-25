@@ -10,6 +10,7 @@
 #endif
 
 #include "math/world_25d.h"
+#include "nodes/camera_25d.h"
 #include "nodes/node_25d.h"
 
 #ifdef TOOLS_ENABLED
@@ -44,12 +45,12 @@ inline void remove_godot_singleton(const StringName &p_singleton_name) {
 }
 
 void initialize_2pt5d_module(ModuleInitializationLevel p_level) {
+	// Note: Classes MUST be registered in inheritance order.
 	if (p_level == MODULE_INITIALIZATION_LEVEL_CORE) {
 		GDREGISTER_CLASS(World25D);
 	} else if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
-		// Register node classes here.
-		// You can add singletons using add_godot_singleton().
 		GDREGISTER_CLASS(Node25D);
+		GDREGISTER_CLASS(Camera25D);
 #ifdef TOOLS_ENABLED
 	} else if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
 #ifdef GDEXTENSION

@@ -42,6 +42,15 @@ void EditorMainScreen25D::_on_selection_changed() {
 	// TODO: Pass the top selected nodes to the transform gizmo.
 }
 
+void EditorMainScreen25D::_on_zoom_amount_changed(const double p_zoom_amount) {
+	_zoom_reset->set_text(String::num(p_zoom_amount * 100.0, 1) + "%");
+}
+
+void EditorMainScreen25D::_on_zoom_reset_pressed() {
+	_editor_main_viewport->navigation_reset_zoom_level();
+	_zoom_reset->set_text("100%");
+}
+
 void EditorMainScreen25D::_update_theme() {
 	// Set the toolbar offsets. Note that these numbers are designed to match Godot's 2D and 3D editor toolbars.
 	_toolbar_hbox->set_offset(Side::SIDE_LEFT, 4.0f * EDSCALE);
@@ -49,6 +58,10 @@ void EditorMainScreen25D::_update_theme() {
 	_toolbar_hbox->set_offset(Side::SIDE_TOP, 0.0f);
 	_toolbar_hbox->set_offset(Side::SIDE_BOTTOM, 29.5f * EDSCALE);
 	_editor_main_viewport->set_offset(Side::SIDE_TOP, 33.0f * EDSCALE);
+	// Set minimum sizes for the zoom buttons.
+	_zoom_minus->set_custom_minimum_size(Size2(28.0f, 28.0f) * EDSCALE);
+	_zoom_reset->set_custom_minimum_size(Size2(64.0f, 28.0f) * EDSCALE);
+	_zoom_plus->set_custom_minimum_size(Size2(28.0f, 28.0f) * EDSCALE);
 	// Set icons.
 	_toolbar_buttons[TOOLBAR_BUTTON_MODE_SELECT]->set_button_icon(get_editor_theme_icon(StringName("ToolSelect")));
 	_toolbar_buttons[TOOLBAR_BUTTON_MODE_MOVE]->set_button_icon(get_editor_theme_icon(StringName("ToolMove")));
@@ -86,6 +99,14 @@ void EditorMainScreen25D::press_menu_item(const int p_option) {
 			// TODO: Pass the gizmo mode to the transform gizmo.
 		} break;
 	}
+}
+
+void EditorMainScreen25D::press_zoom_minus() {
+	_editor_main_viewport->navigation_change_zoom_level(-6);
+}
+
+void EditorMainScreen25D::press_zoom_plus() {
+	_editor_main_viewport->navigation_change_zoom_level(6);
 }
 
 void EditorMainScreen25D::setup(EditorUndoRedoManager *p_undo_redo_manager) {
@@ -134,7 +155,33 @@ EditorMainScreen25D::EditorMainScreen25D() {
 	_editor_main_viewport->setup(this);
 	add_child(_editor_main_viewport);
 
+	// Set up the zoom buttons.
+	Control *spacer = memnew(Control);
+	spacer->set_h_size_flags(SIZE_EXPAND_FILL);
+	_toolbar_hbox->add_child(spacer);
+
+	_zoom_minus = memnew(Button);
+	_zoom_minus->set_text("-");
+	_zoom_minus->set_tooltip_text(TTR("Zoom Out"));
+	_zoom_minus->connect(StringName("pressed"), callable_mp(this, &EditorMainScreen25D::press_zoom_minus));
+	_toolbar_hbox->add_child(_zoom_minus);
+
+	_zoom_reset = memnew(Button);
+	_zoom_reset->set_flat(true);
+	_zoom_reset->set_text("100%");
+	_zoom_reset->set_tooltip_text(TTR("Reset Zoom"));
+	_zoom_reset->connect(StringName("pressed"), callable_mp(this, &EditorMainScreen25D::_on_zoom_reset_pressed));
+	_toolbar_hbox->add_child(_zoom_reset);
+
+	_zoom_plus = memnew(Button);
+	_zoom_plus->set_text("+");
+	_zoom_plus->set_tooltip_text(TTR("Zoom In"));
+	_zoom_plus->connect(StringName("pressed"), callable_mp(this, &EditorMainScreen25D::press_zoom_plus));
+	_toolbar_hbox->add_child(_zoom_plus);
+
+	// Connect signals.
 	EditorInterface::get_singleton()->get_selection()->connect(StringName("selection_changed"), callable_mp(this, &EditorMainScreen25D::_on_selection_changed));
+	_editor_main_viewport->connect(StringName("zoom_amount_changed"), callable_mp(this, &EditorMainScreen25D::_on_zoom_amount_changed));
 
 	set_process(true);
 }

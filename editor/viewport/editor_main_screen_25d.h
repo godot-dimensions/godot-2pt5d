@@ -32,8 +32,14 @@ private:
 	EditorMainViewport25D *_editor_main_viewport = nullptr;
 	Viewport *_edited_scene_viewport = nullptr;
 
+	Button *_zoom_minus = nullptr;
+	Button *_zoom_reset = nullptr;
+	Button *_zoom_plus = nullptr;
+
 	void _on_button_toggled(const bool p_toggled_on, const int p_option);
 	void _on_selection_changed();
+	void _on_zoom_amount_changed(const double p_zoom_amount);
+	void _on_zoom_reset_pressed();
 	void _update_theme();
 
 protected:
@@ -42,6 +48,8 @@ protected:
 
 public:
 	void press_menu_item(const int p_option);
+	void press_zoom_minus();
+	void press_zoom_plus();
 
 	void setup(EditorUndoRedoManager *p_undo_redo_manager);
 	EditorMainScreen25D();

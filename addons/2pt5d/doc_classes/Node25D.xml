@@ -17,6 +17,13 @@
 				Rotates the global 3D transform of the node by the rotation that corresponds to the given global 2D rotation in radians.
 			</description>
 		</method>
+		<method name="global_translate_2d">
+			<return type="void" />
+			<param index="0" name="offset" type="Vector2" />
+			<description>
+				Translates the global 3D transform of the node by the offset that corresponds to the given global 2D offset.
+			</description>
+		</method>
 		<method name="local_rotate_2d">
 			<return type="void" />
 			<param index="0" name="rotation" type="float" />

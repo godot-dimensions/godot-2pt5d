@@ -98,6 +98,7 @@ public:
 	Transform2D get_global_transform_2d() const;
 	void set_global_transform_2d(const Transform2D &p_transform);
 	Vector2 get_global_position_2d() const;
+	void global_translate_2d(const Vector2 &p_offset);
 	void set_global_position_2d(const Vector2 &p_position);
 	real_t get_global_rotation_2d() const;
 	void global_rotate_2d(const real_t p_rotation);

@@ -348,6 +348,12 @@ Vector2 Node25D::get_global_position_2d() const {
 	return _world->xform_3d_to_2d(global_pos);
 }
 
+void Node25D::global_translate_2d(const Vector2 &p_offset) {
+	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D position.");
+	const Vector3 movement = _world->xform_inv_2d_to_3d(p_offset);
+	set_global_position_3d(get_global_position_3d() + movement);
+}
+
 void Node25D::set_global_position_2d(const Vector2 &p_position) {
 	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D position.");
 	const Vector2 current_pos = get_global_position_2d();
@@ -435,6 +441,7 @@ void Node25D::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::TRANSFORM2D, "global_transform_2d", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_transform_2d", "get_global_transform_2d");
 
 	ClassDB::bind_method(D_METHOD("get_global_position_2d"), &Node25D::get_global_position_2d);
+	ClassDB::bind_method(D_METHOD("global_translate_2d", "offset"), &Node25D::global_translate_2d);
 	ClassDB::bind_method(D_METHOD("set_global_position_2d", "position"), &Node25D::set_global_position_2d);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "global_position_2d", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_NONE), "set_global_position_2d", "get_global_position_2d");
 
