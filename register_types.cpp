@@ -12,6 +12,7 @@
 #include "math/world_25d.h"
 #include "nodes/camera_25d.h"
 #include "nodes/node_25d.h"
+#include "nodes/sprite_25d.h"
 
 #ifdef TOOLS_ENABLED
 #include "editor/godot_25d_editor_plugin.h"
@@ -51,6 +52,7 @@ void initialize_2pt5d_module(ModuleInitializationLevel p_level) {
 	} else if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(Node25D);
 		GDREGISTER_CLASS(Camera25D);
+		GDREGISTER_CLASS(Sprite25D);
 #ifdef TOOLS_ENABLED
 	} else if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
 #ifdef GDEXTENSION

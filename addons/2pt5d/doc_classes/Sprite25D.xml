@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="Sprite25D" inherits="Node25D" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		General-purpose 2.5D sprite node.
+	</brief_description>
+	<description>
+		Sprite25D is a 2.5D node that displays a 2D texture for 2D rendering in a 2.5D scene. The drawing position can be adjusted with the properties, and the sprite can be used for animations if the input texture is a sprite sheet.
+		This node inherits [Node25D] for ease of use in the 2.5D editor and so it has a 3D transform, but it uses a [Sprite2D] internally for rendering. Using this node is optional, you can also just add a [Sprite2D] as a child of a [Node25D] to achieve the same effect. If you need to access the internal sprite, use [method get_sprite_2d].
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="get_sprite_2d" qualifiers="const">
+			<return type="Sprite2D" />
+			<description>
+				Returns the internal [Sprite2D] node used for rendering. This can be used to access the sprite's properties and methods directly. This is an internal node, freeing it may cause a crash.
+			</description>
+		</method>
+	</methods>
+	<members>
+		<member name="flip_horizontal" type="bool" setter="set_flip_horizontal" getter="get_flip_horizontal" default="false">
+			If [code]true[/code], the texture is flipped horizontally. This is a wrapper around [member Sprite2D.flip_h].
+		</member>
+		<member name="flip_vertical" type="bool" setter="set_flip_vertical" getter="get_flip_vertical" default="false">
+			If [code]true[/code], the texture is flipped vertically. This is a wrapper around [member Sprite2D.flip_v].
+		</member>
+		<member name="frame" type="int" setter="set_frame" getter="get_frame" default="0">
+			Current frame to display from sprite sheet, if [member hframes] or [member vframes] is greater than 1. This property is automatically adjusted when [member hframes] or [member vframes] are changed to keep pointing to the same visual frame (same column and row). If that's impossible, this value is reset to [code]0[/code]. This is a wrapper around [member Sprite2D.frame].
+		</member>
+		<member name="frame_coords" type="Vector2i" setter="set_frame_coords" getter="get_frame_coords" default="Vector2i(0, 0)">
+			Coordinates of the frame to display from sprite sheet. This changes the [member frame] property, but allows you to select from a place in the 2D grid using a [Vector2i], instead of a linear index. This is a wrapper around [member Sprite2D.frame_coords].
+		</member>
+		<member name="horizontal_frames" type="int" setter="set_horizontal_frames" getter="get_horizontal_frames" default="1">
+			The number of columns in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that's impossible, [member frame] is reset to [code]0[/code]. This is a wrapper around [member Sprite2D.hframes].
+		</member>
+		<member name="is_centered" type="bool" setter="set_is_centered" getter="get_is_centered" default="true">
+			If [code]true[/code], the texture is centered on the sprite's 2D origin. This is a wrapper around [member Sprite2D.centered].
+		</member>
+		<member name="offset" type="Vector2" setter="set_offset" getter="get_offset" default="Vector2(0, 0)">
+			The offset from the sprite's normal position to use when drawing the texture. This is a wrapper around [member Sprite2D.offset].
+		</member>
+		<member name="texture" type="Texture2D" setter="set_texture" getter="get_texture">
+			The image of the sprite as a [Texture2D]. This is a wrapper around [member Sprite2D.texture].
+		</member>
+		<member name="vertical_frames" type="int" setter="set_vertical_frames" getter="get_vertical_frames" default="1">
+			The number of rows in the sprite sheet. When this property is changed, [member frame] is adjusted so that the same visual frame is maintained (same row and column). If that's impossible, [member frame] is reset to [code]0[/code]. This is a wrapper around [member Sprite2D.vframes].
+		</member>
+	</members>
+</class>

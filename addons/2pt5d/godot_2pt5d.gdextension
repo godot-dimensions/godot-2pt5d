@@ -25,5 +25,7 @@ ios.release = "bin/libgodot_2pt5d.ios.release.universal.dylib"
 
 [icons]
 
+Camera25D = "icons/Camera25D.svg"
 Node25D = "icons/Node25D.svg"
+Sprite25D = "icons/Sprite25D.svg"
 World25D = "icons/World25D.svg"
