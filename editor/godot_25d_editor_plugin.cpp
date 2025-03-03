@@ -47,13 +47,8 @@ void Godot25DEditorPlugin::_move_2pt5d_main_screen_tab_button() const {
 	Node *button_asset_lib_tab = editor->find_child("AssetLib", true, false);
 	ERR_FAIL_NULL(button_asset_lib_tab);
 	Node *main_editor_button_hbox = button_asset_lib_tab->get_parent();
-#if GDEXTENSION
-	Node *button_2pt5d_tab = main_editor_button_hbox->get_node<Node>(NodePath("2_5D"));
-	Node *button_3d_tab = main_editor_button_hbox->get_node<Node>(NodePath("3D"));
-#elif GODOT_MODULE
-	Node *button_2pt5d_tab = main_editor_button_hbox->get_node(NodePath("2_5D"));
-	Node *button_3d_tab = main_editor_button_hbox->get_node(NodePath("3D"));
-#endif
+	Button *button_2pt5d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "2_5D");
+	Button *button_3d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "3D");
 	ERR_FAIL_NULL(button_2pt5d_tab);
 	ERR_FAIL_NULL(button_3d_tab);
 	main_editor_button_hbox->move_child(button_2pt5d_tab, button_3d_tab->get_index());
@@ -121,7 +116,12 @@ void Godot25DEditorPlugin::_bind_methods() {
 
 Godot25DEditorPlugin::Godot25DEditorPlugin() {
 	set_name(StringName("Godot2.5DEditorPlugin"));
-	_main_screen = memnew(EditorMainScreen25D);
-	_main_screen->setup(get_undo_redo());
-	EditorInterface::get_singleton()->get_editor_main_screen()->add_child(_main_screen);
+	Control *godot_editor_main_screen = EditorInterface::get_singleton()->get_editor_main_screen();
+	if (godot_editor_main_screen->has_node(NodePath("EditorMainScreen4D"))) {
+		_main_screen = GET_NODE_TYPE(godot_editor_main_screen, EditorMainScreen25D, "EditorMainScreen25D");
+	} else {
+		_main_screen = memnew(EditorMainScreen25D);
+		_main_screen->setup(get_undo_redo());
+		godot_editor_main_screen->add_child(_main_screen);
+	}
 }

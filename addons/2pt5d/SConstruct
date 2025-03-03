@@ -31,8 +31,8 @@ if not "arch_suffix" in env:
     env["arch_suffix"] = env["arch"]
 
 if env["target"] == "editor":
-    env.Append(CPPPATH=["../../editor/"])
-    sources += Glob("../../editor/*.cpp")
+    env.Append(CPPPATH=["../../editor/", "../../editor/icons/", "../../editor/viewport/"])
+    sources += Glob("../../editor/*.cpp") + Glob("../../editor/icons/*.cpp") + Glob("../../editor/viewport/*.cpp")
 
 if env["target"] in ["editor", "template_debug"]:
     try:

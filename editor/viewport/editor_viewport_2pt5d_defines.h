@@ -10,6 +10,9 @@
 #include <godot_cpp/classes/editor_settings.hpp>
 #include <godot_cpp/classes/editor_undo_redo_manager.hpp>
 #include <godot_cpp/classes/input.hpp>
+#include <godot_cpp/classes/input_event_key.hpp>
+#include <godot_cpp/classes/input_event_mouse_button.hpp>
+#include <godot_cpp/classes/input_event_mouse_motion.hpp>
 
 #define EDITOR_GET(m_name) Variant()
 #define EDSCALE EditorInterface::get_singleton()->get_editor_scale()

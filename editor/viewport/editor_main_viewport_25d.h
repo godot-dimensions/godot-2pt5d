@@ -66,6 +66,4 @@ public:
 
 	// TODO: Pass the transform gizmo to this function.
 	void setup(EditorMainScreen25D *p_editor_main_screen);
-
-	EditorMainViewport25D();
 };

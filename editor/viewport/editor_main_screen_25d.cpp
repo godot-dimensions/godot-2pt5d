@@ -110,10 +110,8 @@ void EditorMainScreen25D::press_zoom_plus() {
 }
 
 void EditorMainScreen25D::setup(EditorUndoRedoManager *p_undo_redo_manager) {
-	// TODO: Pass the undo/redo manager to the transform gizmo.
-}
-
-EditorMainScreen25D::EditorMainScreen25D() {
+	// Things that we should do in the constructor but can't in GDExtension
+	// due to how GDExtension runs the constructor for each registered class.
 	set_name(StringName("EditorMainScreen25D"));
 	set_visible(false);
 	set_v_size_flags(SIZE_EXPAND_FILL);
@@ -184,4 +182,7 @@ EditorMainScreen25D::EditorMainScreen25D() {
 	_editor_main_viewport->connect(StringName("zoom_amount_changed"), callable_mp(this, &EditorMainScreen25D::_on_zoom_amount_changed));
 
 	set_process(true);
+
+	// Set up things with the arguments (not constructor things).
+	// TODO: Pass the undo/redo manager to the transform gizmo.
 }

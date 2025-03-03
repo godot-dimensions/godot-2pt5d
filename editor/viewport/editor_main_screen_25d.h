@@ -52,5 +52,4 @@ public:
 	void press_zoom_plus();
 
 	void setup(EditorUndoRedoManager *p_undo_redo_manager);
-	EditorMainScreen25D();
 };

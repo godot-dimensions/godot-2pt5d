@@ -364,11 +364,12 @@ void EditorViewportRotation25D::GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_even
 	}
 }
 
-void EditorViewportRotation25D::set_editor_main_viewport(EditorMainViewport25D *p_editor_main_viewport) {
-	_editor_main_viewport = p_editor_main_viewport;
-}
-
-EditorViewportRotation25D::EditorViewportRotation25D() {
+void EditorViewportRotation25D::setup(EditorMainViewport25D *p_editor_main_viewport) {
+	// Things that we should do in the constructor but can't in GDExtension
+	// due to how GDExtension runs the constructor for each registered class.
 	set_name(StringName("EditorViewportRotation25D"));
 	set_anchors_and_offsets_preset(Control::PRESET_TOP_RIGHT);
+
+	// Set up things with the arguments (not constructor things).
+	_editor_main_viewport = p_editor_main_viewport;
 }

@@ -14,8 +14,5 @@ public:
 	static void _bind_methods() {}
 	virtual void GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_event) override;
 
-	void set_editor_main_screen(EditorMainScreen25D *p_editor_main_screen);
-	void set_editor_main_viewport(EditorMainViewport25D *p_editor_main_viewport);
-
-	EditorInputSurface25D();
+	void setup(EditorMainScreen25D *p_editor_main_screen, EditorMainViewport25D *p_editor_main_viewport);
 };

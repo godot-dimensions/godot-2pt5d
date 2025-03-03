@@ -133,11 +133,8 @@ void EditorMainViewport25D::set_edited_scene_viewport(Viewport *p_edited_scene_v
 }
 
 void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen) {
-	_editor_main_screen = p_editor_main_screen;
-	_input_surface_2pt5d->set_editor_main_screen(_editor_main_screen);
-}
-
-EditorMainViewport25D::EditorMainViewport25D() {
+	// Things that we should do in the constructor but can't in GDExtension
+	// due to how GDExtension runs the constructor for each registered class.
 	set_name(StringName("EditorMainViewport25D"));
 	set_clip_children_mode(Control::CLIP_CHILDREN_AND_DRAW);
 	set_v_size_flags(SIZE_EXPAND_FILL);
@@ -158,12 +155,15 @@ EditorMainViewport25D::EditorMainViewport25D() {
 
 	// Set up the input surface and viewport rotation gizmo.
 	_input_surface_2pt5d = memnew(EditorInputSurface25D);
-	_input_surface_2pt5d->set_editor_main_viewport(this);
 	_sub_viewport_container->add_child(_input_surface_2pt5d);
 
 	_viewport_rotation_2pt5d = memnew(EditorViewportRotation25D);
-	_viewport_rotation_2pt5d->set_editor_main_viewport(this);
+	_viewport_rotation_2pt5d->setup(this);
 	_input_surface_2pt5d->add_child(_viewport_rotation_2pt5d);
+
+	// Set up things with the arguments (not constructor things).
+	_editor_main_screen = p_editor_main_screen;
+	_input_surface_2pt5d->setup(_editor_main_screen, this);
 }
 
 void EditorMainViewport25D::_bind_methods() {

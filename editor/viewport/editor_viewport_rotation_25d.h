@@ -59,7 +59,5 @@ public:
 
 	virtual void GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_event) override;
 
-	void set_editor_main_viewport(EditorMainViewport25D *p_editor_main_viewport);
-
-	EditorViewportRotation25D();
+	void setup(EditorMainViewport25D *p_editor_main_viewport);
 };
