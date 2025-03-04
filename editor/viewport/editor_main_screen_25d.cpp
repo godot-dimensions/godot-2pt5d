@@ -17,11 +17,11 @@
 #include "scene/gui/separator.h"
 
 // See https://github.com/godotengine/godot/pull/99897
-#if GODOT_VERSION < 0x040500
+#if VERSION_HEX < 0x040500
 #define get_top_selected_nodes get_selected_node_list
 #else
 #define get_top_selected_nodes get_top_selected_node_list
-#endif // GODOT_VERSION
+#endif // VERSION_HEX
 #endif
 
 void EditorMainScreen25D::_on_button_toggled(const bool p_toggled_on, const int p_option) {

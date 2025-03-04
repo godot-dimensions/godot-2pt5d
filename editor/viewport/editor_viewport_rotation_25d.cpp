@@ -13,7 +13,7 @@
 // How far apart the axis circles are from the center of the gizmo.
 constexpr float GIZMO_BASE_SIZE = 80.0f;
 
-String _get_axis_letter(int p_axis) {
+String _get_axis_letter_2pt5d(int p_axis) {
 	switch (p_axis) {
 		case 0:
 			return "X";
@@ -73,7 +73,7 @@ void EditorViewportRotation25D::_draw_axis_circle(const Axis2D &p_axis) {
 	if (p_axis.axis_type == AXIS_TYPE_CIRCLE_POSITIVE) {
 		draw_circle(p_axis.screen_point, axis_circle_radius, color, true, -1.0f, true);
 		// Draw the axis letter for the positive axes.
-		const String axis_letter = _get_axis_letter(p_axis.axis_number);
+		const String axis_letter = _get_axis_letter_2pt5d(p_axis.axis_number);
 		const Ref<Font> &font = get_theme_font(StringName("rotation_control"), StringName("EditorFonts"));
 		const int font_size = get_theme_font_size(StringName("rotation_control_size"), StringName("EditorFonts"));
 		const Size2 char_size = font->get_char_size(axis_letter[0], font_size);
