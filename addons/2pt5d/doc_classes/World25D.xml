@@ -34,7 +34,7 @@
 		</method>
 		<method name="from_preset" qualifiers="static">
 			<return type="World25D" />
-			<param index="0" name="preset" type="int" enum="Basis25D.Preset" />
+			<param index="0" name="preset" type="int" enum="World25D.Basis25DPreset" />
 			<param index="1" name="angle" type="float" />
 			<param index="2" name="angle_z" type="float" />
 			<description>
@@ -69,7 +69,7 @@
 		<member name="basis_draw_order" type="Vector3" setter="set_basis_draw_order" getter="get_basis_draw_order">
 			The [Vector3] that determines the draw order of 2.5D objects. Objects further along this vector will be shown in the foreground. This is also known as depth sorting, or the Z-index. See [member CanvasItem.z_index] for more information.
 		</member>
-		<member name="basis_preset" type="int" setter="set_basis_preset" getter="get_basis_preset" enum="Basis25D.Preset" default="1">
+		<member name="basis_preset" type="int" setter="set_basis_preset" getter="get_basis_preset" enum="World25D.Basis25DPreset" default="1">
 			The preset for the 2.5D basis. This will set the [member basis] to a predefined value, which can be useful for setting up a 2.5D world quickly without needing to manually set the basis. You can also set this to "Custom" if you want to set the basis manually.
 		</member>
 		<member name="basis_x" type="Vector2" setter="set_basis_x" getter="get_basis_x">
@@ -95,4 +95,48 @@
 			</description>
 		</signal>
 	</signals>
+	<constants>
+		<constant name="PRESET_CUSTOM" value="0" enum="Basis25DPreset">
+			Use a fully custom 2.5D basis where you get to choose the X, Y, and Z columns and the draw order.
+		</constant>
+		<constant name="PRESET_FROM_ANGLE" value="1" enum="Basis25DPreset">
+			Use a 2.5D basis where the X column points to the right and the YZ columns are aligned vertically based on the angle property. An angle of [code]0.0[/code] will make the Z column perpendicular to the screen, while an angle of [code]TAU / 4.0[/code] or 90 degrees will make the Y column perpendicular to the screen.
+		</constant>
+		<constant name="PRESET_ISOMETRIC" value="2" enum="Basis25DPreset">
+			Use a 2.5D basis where each axis is 120 degrees apart from the others, and the Y axis is vertical. This is commonly known as isometric view.
+		</constant>
+		<constant name="PRESET_DIMETRIC" value="3" enum="Basis25DPreset">
+			Use a 2.5D basis where the X and Z axes are at the same angle from the horizontal, and the Y axis is vertical. This is commonly known as dimetric view. The angle property is used for the angle between X and the horizontal.
+		</constant>
+		<constant name="PRESET_TRIMETRIC" value="4" enum="Basis25DPreset">
+			Use a 2.5D basis where the X and Z axes are at different angles from the horizontal, and the Y axis is vertical. This is commonly known as trimetric view. The angle property is used for the angle between X and the horizontal, and the angle_z property is used for the angle between Z and the horizontal.
+		</constant>
+		<constant name="PRESET_OBLIQUE_X" value="5" enum="Basis25DPreset">
+			Use a 2.5D basis where the X axis is at a 45 degree angle to the bottom-right and conveys depth, while the Y axis points up and the Z axis points left on the screen.
+		</constant>
+		<constant name="PRESET_OBLIQUE_Y" value="6" enum="Basis25DPreset">
+			Use a 2.5D basis where the Y axis is at a 45 degree angle to the top-left and conveys depth, while the X axis points right and the Z axis points down on the screen.
+		</constant>
+		<constant name="PRESET_OBLIQUE_Z" value="7" enum="Basis25DPreset">
+			Use a 2.5D basis where the Z axis is at a 45 degree angle to the bottom-left and conveys depth, while the X axis points right and the Y axis points up on the screen.
+		</constant>
+		<constant name="PRESET_FROM_POS_X" value="8" enum="Basis25DPreset">
+			Use a 2.5D basis where the X axis points out of the screen and conveys depth, while the Y axis points up and the Z axis points left on the screen.
+		</constant>
+		<constant name="PRESET_FROM_NEG_X" value="9" enum="Basis25DPreset">
+			Use a 2.5D basis where the X axis points into the screen and conveys depth, while the Y axis points up and the Z axis points right on the screen.
+		</constant>
+		<constant name="PRESET_FROM_POS_Y" value="10" enum="Basis25DPreset">
+			Use a 2.5D basis where the Y axis points out of the screen and conveys depth, while the X axis points right and the Z axis points down on the screen.
+		</constant>
+		<constant name="PRESET_FROM_NEG_Y" value="11" enum="Basis25DPreset">
+			Use a 2.5D basis where the Y axis points into the screen and conveys depth, while the X axis points right and the Z axis points up on the screen.
+		</constant>
+		<constant name="PRESET_FROM_POS_Z" value="12" enum="Basis25DPreset">
+			Use a 2.5D basis where the Z axis points out of the screen and conveys depth, while the X axis points right and the Y axis points up on the screen.
+		</constant>
+		<constant name="PRESET_FROM_NEG_Z" value="13" enum="Basis25DPreset">
+			Use a 2.5D basis where the Z axis points into the screen and conveys depth, while the X axis points left and the Y axis points up on the screen.
+		</constant>
+	</constants>
 </class>

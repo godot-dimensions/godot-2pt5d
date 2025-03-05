@@ -64,7 +64,7 @@
 			The local 2D rotation of the node, in radians.
 		</member>
 		<member name="local_transform_2d" type="Transform2D" setter="set_local_transform_2d" getter="get_local_transform_2d">
-			The local 2D transform of the node, a combination of both [member rotation_2d] and [member position_2d]. This property is recommended to not be set, instead set [member transform_3d] and let the [member world] property handle the conversion to 2D.
+			The local 2D transform of the node, a combination of both [member local_rotation_2d] and [member local_position_2d]. This property is recommended to not be set, instead set [member transform_3d] and let the [member world] property handle the conversion to 2D.
 		</member>
 		<member name="position_3d" type="Vector3" setter="set_position_3d" getter="get_position_3d" default="Vector3(0, 0, 0)">
 			The local 3D position of the node, relative to the parent.
@@ -87,16 +87,16 @@
 			Do not edit the rotation, or save the rotation in any way.
 		</constant>
 		<constant name="ROTATION_EDIT_MODE_2D_ANGLE" value="1" enum="RotationEditMode">
-			Use [param local_rotation_2d] for editing the rotation, and save the rotation in [param basis_3d] (must save as a 3D rotation).
+			Use [member local_rotation_2d] for editing the rotation, and save the rotation in [member basis_3d] (must save as a 3D rotation).
 		</constant>
 		<constant name="ROTATION_EDIT_MODE_3D_EULER" value="2" enum="RotationEditMode">
-			Use [param euler_3d] for editing the rotation, and save the rotation in [param euler_3d].
+			Use [member euler_3d] for editing the rotation, and save the rotation in [member euler_3d].
 		</constant>
 		<constant name="ROTATION_EDIT_MODE_3D_QUATERNION" value="3" enum="RotationEditMode">
-			Use [param quaternion_3d] for editing the rotation, and save the rotation in [param quaternion_3d].
+			Use [member quaternion_3d] for editing the rotation, and save the rotation in [member quaternion_3d].
 		</constant>
 		<constant name="ROTATION_EDIT_MODE_3D_BASIS" value="4" enum="RotationEditMode">
-			Use [param basis_3d] for editing the rotation, and save the rotation in [param basis_3d].
+			Use [member basis_3d] for editing the rotation, and save the rotation in [member basis_3d].
 		</constant>
 	</constants>
 </class>

@@ -2,25 +2,25 @@
 
 // Basis properties.
 
-void World25D::set_basis_preset(const Basis25D::Preset p_basis_preset) {
+void World25D::set_basis_preset(const Basis25DPreset p_basis_preset) {
 	_basis_preset = p_basis_preset;
-	if (_basis_preset != Basis25D::PRESET_CUSTOM) {
-		set_basis(Basis25D::from_preset(_basis_preset, _basis_angle, _basis_angle_z));
+	if (_basis_preset != PRESET_CUSTOM) {
+		set_basis(Basis25D::from_preset((Basis25D::Preset)_basis_preset, _basis_angle, _basis_angle_z));
 	}
 	notify_property_list_changed();
 }
 
 void World25D::set_basis_angle(const real_t p_basis_angle) {
 	_basis_angle = p_basis_angle;
-	if (_basis_preset != Basis25D::PRESET_CUSTOM) {
-		set_basis(Basis25D::from_preset(_basis_preset, _basis_angle, _basis_angle_z));
+	if (_basis_preset != PRESET_CUSTOM) {
+		set_basis(Basis25D::from_preset((Basis25D::Preset)_basis_preset, _basis_angle, _basis_angle_z));
 	}
 }
 
 void World25D::set_basis_angle_z(const real_t p_basis_angle_z) {
 	_basis_angle_z = p_basis_angle_z;
-	if (_basis_preset != Basis25D::PRESET_CUSTOM) {
-		set_basis(Basis25D::from_preset(_basis_preset, _basis_angle, _basis_angle_z));
+	if (_basis_preset != PRESET_CUSTOM) {
+		set_basis(Basis25D::from_preset((Basis25D::Preset)_basis_preset, _basis_angle, _basis_angle_z));
 	}
 }
 
@@ -82,11 +82,11 @@ Ref<World25D> World25D::from_custom(const Basis &p_basis) {
 	Ref<World25D> world;
 	world.instantiate();
 	world->_basis = Basis25D(p_basis);
-	world->_basis_preset = Basis25D::PRESET_CUSTOM;
+	world->_basis_preset = World25D::PRESET_CUSTOM;
 	return world;
 }
 
-Ref<World25D> World25D::from_preset(const Basis25D::Preset p_preset, const real_t p_angle, const real_t p_angle_z) {
+Ref<World25D> World25D::from_preset(const Basis25DPreset p_preset, const real_t p_angle, const real_t p_angle_z) {
 	Ref<World25D> world;
 	world.instantiate();
 	world->_basis_angle = p_angle;
@@ -100,9 +100,9 @@ void World25D::_get_property_list(List<PropertyInfo> *p_list) const {
 		PropertyInfo &prop = E->get();
 		if (prop.name == StringName("basis_angle")) {
 			switch (_basis_preset) {
-				case Basis25D::PRESET_FROM_ANGLE:
-				case Basis25D::PRESET_DIMETRIC:
-				case Basis25D::PRESET_TRIMETRIC: {
+				case PRESET_FROM_ANGLE:
+				case PRESET_DIMETRIC:
+				case PRESET_TRIMETRIC: {
 					prop.usage = PROPERTY_USAGE_DEFAULT;
 				} break;
 				default: {
@@ -110,17 +110,17 @@ void World25D::_get_property_list(List<PropertyInfo> *p_list) const {
 				} break;
 			}
 		} else if (prop.name == StringName("basis_angle_z")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_TRIMETRIC) ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_TRIMETRIC) ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
 		} else if (prop.name == StringName("basis")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_CUSTOM) ? PROPERTY_USAGE_STORAGE : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_STORAGE : PROPERTY_USAGE_NONE;
 		} else if (prop.name == StringName("basis_x")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
 		} else if (prop.name == StringName("basis_y")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
 		} else if (prop.name == StringName("basis_z")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
 		} else if (prop.name == StringName("basis_draw_order")) {
-			prop.usage = (_basis_preset == Basis25D::PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
 		}
 	}
 	Resource::_get_property_list(p_list);
@@ -181,4 +181,20 @@ void World25D::_bind_methods() {
 
 	// Signals.
 	ADD_SIGNAL(MethodInfo("basis_changed"));
+
+	// Enums.
+	BIND_ENUM_CONSTANT(PRESET_CUSTOM);
+	BIND_ENUM_CONSTANT(PRESET_FROM_ANGLE);
+	BIND_ENUM_CONSTANT(PRESET_ISOMETRIC);
+	BIND_ENUM_CONSTANT(PRESET_DIMETRIC);
+	BIND_ENUM_CONSTANT(PRESET_TRIMETRIC);
+	BIND_ENUM_CONSTANT(PRESET_OBLIQUE_X);
+	BIND_ENUM_CONSTANT(PRESET_OBLIQUE_Y);
+	BIND_ENUM_CONSTANT(PRESET_OBLIQUE_Z);
+	BIND_ENUM_CONSTANT(PRESET_FROM_POS_X);
+	BIND_ENUM_CONSTANT(PRESET_FROM_NEG_X);
+	BIND_ENUM_CONSTANT(PRESET_FROM_POS_Y);
+	BIND_ENUM_CONSTANT(PRESET_FROM_NEG_Y);
+	BIND_ENUM_CONSTANT(PRESET_FROM_POS_Z);
+	BIND_ENUM_CONSTANT(PRESET_FROM_NEG_Z);
 }

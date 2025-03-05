@@ -25,7 +25,7 @@
 			If [code]true[/code], the texture is flipped vertically. This is a wrapper around [member Sprite2D.flip_v].
 		</member>
 		<member name="frame" type="int" setter="set_frame" getter="get_frame" default="0">
-			Current frame to display from sprite sheet, if [member hframes] or [member vframes] is greater than 1. This property is automatically adjusted when [member hframes] or [member vframes] are changed to keep pointing to the same visual frame (same column and row). If that's impossible, this value is reset to [code]0[/code]. This is a wrapper around [member Sprite2D.frame].
+			Current frame to display from sprite sheet, if [member horizontal_frames] or [member vertical_frames] is greater than 1. This property is automatically adjusted when [member horizontal_frames] or [member vertical_frames] are changed to keep pointing to the same visual frame (same column and row). If that's impossible, this value is reset to [code]0[/code]. This is a wrapper around [member Sprite2D.frame].
 		</member>
 		<member name="frame_coords" type="Vector2i" setter="set_frame_coords" getter="get_frame_coords" default="Vector2i(0, 0)">
 			Coordinates of the frame to display from sprite sheet. This changes the [member frame] property, but allows you to select from a place in the 2D grid using a [Vector2i], instead of a linear index. This is a wrapper around [member Sprite2D.frame_coords].

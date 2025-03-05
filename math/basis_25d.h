@@ -14,6 +14,7 @@ struct _NO_DISCARD_ Basis25D {
 	};
 	Vector3 draw_order;
 
+	// Keep this in sync with World25D.
 	enum Preset {
 		PRESET_CUSTOM,
 		PRESET_FROM_ANGLE,
@@ -29,6 +30,7 @@ struct _NO_DISCARD_ Basis25D {
 		PRESET_FROM_NEG_Y,
 		PRESET_FROM_POS_Z,
 		PRESET_FROM_NEG_Z,
+		PRESET_MAX,
 	};
 
 	// Trivial getters and setters.

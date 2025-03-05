@@ -132,6 +132,8 @@ Basis25D Basis25D::from_preset(const Preset p_preset, const real_t p_angle, cons
 			return Basis25D(Vector2(1, 0), Vector2(0, -1), Vector2(0, 0), Vector3(0, 0, 1));
 		case PRESET_FROM_NEG_Z:
 			return Basis25D(Vector2(-1, 0), Vector2(0, -1), Vector2(0, 0), Vector3(0, 0, -1));
+		case PRESET_MAX:
+			break;
 	}
 	return Basis25D();
 }

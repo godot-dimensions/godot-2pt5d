@@ -238,41 +238,41 @@ void EditorViewportRotation25D::_process_click(const int p_index, const Vector2 
 				if (_focused_axis.axis_type == AXIS_TYPE_SPECIAL) {
 					switch (_focused_axis.axis_number) {
 						case 0: {
-							world->set_basis_preset(Basis25D::PRESET_ISOMETRIC);
+							world->set_basis_preset(World25D::PRESET_ISOMETRIC);
 						} break;
 						case 1: {
-							world->set_basis_preset(Basis25D::PRESET_DIMETRIC);
+							world->set_basis_preset(World25D::PRESET_DIMETRIC);
 						} break;
 						case 2: {
-							world->set_basis_preset(Basis25D::PRESET_TRIMETRIC);
+							world->set_basis_preset(World25D::PRESET_TRIMETRIC);
 						} break;
 						default: {
-							world->set_basis_preset(Basis25D::PRESET_FROM_ANGLE);
+							world->set_basis_preset(World25D::PRESET_FROM_ANGLE);
 						} break;
 					}
 				} else if (p_modifier) {
 					switch (_focused_axis.axis_number) {
 						case 0: {
-							world->set_basis_preset(Basis25D::PRESET_OBLIQUE_X);
+							world->set_basis_preset(World25D::PRESET_OBLIQUE_X);
 						} break;
 						case 1: {
-							world->set_basis_preset(Basis25D::PRESET_OBLIQUE_Y);
+							world->set_basis_preset(World25D::PRESET_OBLIQUE_Y);
 						} break;
 						case 2: {
-							world->set_basis_preset(Basis25D::PRESET_OBLIQUE_Z);
+							world->set_basis_preset(World25D::PRESET_OBLIQUE_Z);
 						} break;
 					}
 				} else {
 					const bool neg = (_focused_axis.axis_type == AXIS_TYPE_CIRCLE_NEGATIVE) != (_focused_axis.screen_point == center);
 					switch (_focused_axis.axis_number) {
 						case 0: {
-							world->set_basis_preset(neg ? Basis25D::PRESET_FROM_NEG_X : Basis25D::PRESET_FROM_POS_X);
+							world->set_basis_preset(neg ? World25D::PRESET_FROM_NEG_X : World25D::PRESET_FROM_POS_X);
 						} break;
 						case 1: {
-							world->set_basis_preset(neg ? Basis25D::PRESET_FROM_NEG_Y : Basis25D::PRESET_FROM_POS_Y);
+							world->set_basis_preset(neg ? World25D::PRESET_FROM_NEG_Y : World25D::PRESET_FROM_POS_Y);
 						} break;
 						case 2: {
-							world->set_basis_preset(neg ? Basis25D::PRESET_FROM_NEG_Z : Basis25D::PRESET_FROM_POS_Z);
+							world->set_basis_preset(neg ? World25D::PRESET_FROM_NEG_Z : World25D::PRESET_FROM_POS_Z);
 						} break;
 					}
 				}

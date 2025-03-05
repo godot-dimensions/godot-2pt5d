@@ -13,9 +13,29 @@
 class World25D : public Resource {
 	GDCLASS(World25D, Resource);
 
+public:
+	// Keep this in sync with World25D.
+	enum Basis25DPreset {
+		PRESET_CUSTOM,
+		PRESET_FROM_ANGLE,
+		PRESET_ISOMETRIC,
+		PRESET_DIMETRIC,
+		PRESET_TRIMETRIC,
+		PRESET_OBLIQUE_X,
+		PRESET_OBLIQUE_Y,
+		PRESET_OBLIQUE_Z,
+		PRESET_FROM_POS_X,
+		PRESET_FROM_NEG_X,
+		PRESET_FROM_POS_Y,
+		PRESET_FROM_NEG_Y,
+		PRESET_FROM_POS_Z,
+		PRESET_FROM_NEG_Z,
+		PRESET_MAX,
+	};
+
 private:
 	Basis25D _basis;
-	Basis25D::Preset _basis_preset = Basis25D::PRESET_FROM_ANGLE;
+	Basis25DPreset _basis_preset = PRESET_FROM_ANGLE;
 	real_t _basis_angle = Math_TAU / 8.0;
 	real_t _basis_angle_z = Math_TAU / 16.0;
 	real_t _pixels_per_meter = 64.0;
@@ -27,8 +47,8 @@ protected:
 
 public:
 	// Basis properties.
-	Basis25D::Preset get_basis_preset() const { return _basis_preset; }
-	void set_basis_preset(const Basis25D::Preset p_basis_preset);
+	Basis25DPreset get_basis_preset() const { return _basis_preset; }
+	void set_basis_preset(const Basis25DPreset p_basis_preset);
 
 	real_t get_basis_angle() const { return _basis_angle; }
 	void set_basis_angle(const real_t p_basis_angle);
@@ -69,7 +89,9 @@ public:
 
 	// Constructors.
 	static Ref<World25D> from_custom(const Basis &p_basis);
-	static Ref<World25D> from_preset(const Basis25D::Preset p_preset, const real_t p_angle, const real_t p_angle_z);
+	static Ref<World25D> from_preset(const Basis25DPreset p_preset, const real_t p_angle, const real_t p_angle_z);
 };
 
-VARIANT_ENUM_CAST(Basis25D::Preset);
+VARIANT_ENUM_CAST(World25D::Basis25DPreset);
+
+static_assert(World25D::PRESET_MAX == (int)Basis25D::PRESET_MAX);

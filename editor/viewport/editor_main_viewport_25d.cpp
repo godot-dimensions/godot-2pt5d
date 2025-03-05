@@ -80,13 +80,13 @@ void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p
 	}
 	Ref<World25D> world = get_world_25d();
 	if (world.is_valid()) {
-		Basis25D::Preset basis_preset = world->get_basis_preset();
+		World25D::Basis25DPreset basis_preset = world->get_basis_preset();
 		switch (basis_preset) {
-			case Basis25D::PRESET_FROM_ANGLE:
-			case Basis25D::PRESET_DIMETRIC: {
+			case World25D::PRESET_FROM_ANGLE:
+			case World25D::PRESET_DIMETRIC: {
 				world->set_basis_angle(world->get_basis_angle() + rotation_radians.y);
 			} break;
-			case Basis25D::PRESET_TRIMETRIC: {
+			case World25D::PRESET_TRIMETRIC: {
 				world->set_basis_angle(world->get_basis_angle() + rotation_radians.y);
 				world->set_basis_angle_z(world->get_basis_angle_z() + rotation_radians.x);
 			} break;
