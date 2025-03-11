@@ -21,6 +21,35 @@
 				Forces this [Camera25D] to become the current active one, overriding any other [Camera25D] or [Camera2D].
 			</description>
 		</method>
+		<method name="viewport_to_world_2d" qualifiers="const">
+			<return type="Vector2" />
+			<param index="0" name="point" type="Vector2" />
+			<description>
+				Given a 2D point in the viewport, returns the corresponding 2D point in the world. This takes into account the camera's transform, the camera's zoom, and the viewport's size. This is similar to [method Camera3D.project_ray_origin].
+			</description>
+		</method>
+		<method name="viewport_to_world_3d" qualifiers="const">
+			<return type="Vector3" />
+			<param index="0" name="point" type="Vector2" />
+			<description>
+				Given a 2D point in the viewport, returns the corresponding 3D point in the world. This takes into account the camera's transform, the camera's zoom, the viewport's size, and the [World25D]'s basis and scale. This is similar to [method Camera3D.project_ray_origin].
+			</description>
+		</method>
+		<method name="world_to_viewport_2d" qualifiers="const">
+			<return type="Vector2" />
+			<param index="0" name="point" type="Vector2" />
+			<description>
+				Given a 2D point in the world, returns the corresponding 2D point in the viewport. This takes into account the camera's transform, the camera's zoom, and the viewport's size.
+				This is similar to [method Camera3D.unproject_position].
+			</description>
+		</method>
+		<method name="world_to_viewport_3d" qualifiers="const">
+			<return type="Vector2" />
+			<param index="0" name="point" type="Vector3" />
+			<description>
+				Given a 3D point in the world, returns the corresponding 2D point in the viewport. This takes into account the camera's transform, the camera's zoom, the viewport's size, and the [World25D]'s basis and scale. This is similar to [method Camera3D.unproject_position].
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="is_enabled" type="bool" setter="set_is_enabled" getter="get_is_enabled" default="true">

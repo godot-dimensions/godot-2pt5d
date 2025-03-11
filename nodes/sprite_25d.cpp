@@ -79,13 +79,14 @@ void Sprite25D::set_frame_coords(const Vector2i &p_coords) {
 Sprite25D::Sprite25D() {
 	_sprite_2d = memnew(Sprite2D);
 	add_child(_sprite_2d);
+	set_process(true);
 }
 
 void Sprite25D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_sprite_2d"), &Sprite25D::get_sprite_2d);
 
-	ClassDB::bind_method(D_METHOD("set_texture", "texture"), &Sprite25D::set_texture);
 	ClassDB::bind_method(D_METHOD("get_texture"), &Sprite25D::get_texture);
+	ClassDB::bind_method(D_METHOD("set_texture", "texture"), &Sprite25D::set_texture);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "texture", PROPERTY_HINT_RESOURCE_TYPE, "Texture2D"), "set_texture", "get_texture");
 
 	// Offset.

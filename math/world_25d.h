@@ -86,6 +86,7 @@ public:
 	real_t calculate_draw_order(const Vector3 &p_vector3) const;
 	Vector2 xform_3d_to_2d(const Vector3 &p_vector3) const;
 	Vector3 xform_inv_2d_to_3d(const Vector2 &p_vector2) const;
+	Transform2D xform_3d_transform_to_2d(const Transform3D &p_transform, const bool p_normalized = true) const;
 
 	// Constructors.
 	static Ref<World25D> from_custom(const Basis &p_basis);

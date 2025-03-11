@@ -71,6 +71,18 @@ Vector3 World25D::xform_inv_2d_to_3d(const Vector2 &p_vector2) const {
 	return _basis.xform_inv_2d_to_3d(p_vector2 / _pixels_per_meter);
 }
 
+Transform2D World25D::xform_3d_transform_to_2d(const Transform3D &p_transform, const bool p_normalized) const {
+	const Vector2 pos_2d = xform_3d_to_2d(p_transform.origin);
+	Vector2 down_2d = xform_3d_to_2d(-p_transform.basis.get_column(1));
+	if (down_2d == Vector2()) {
+		down_2d = Vector2(0, 1);
+	} else if (p_normalized) {
+		down_2d = down_2d.normalized();
+	}
+	const Vector2 right_2d = Vector2(down_2d.y, -down_2d.x);
+	return Transform2D(right_2d, down_2d, pos_2d);
+}
+
 void World25D::set_pixels_per_meter(const real_t p_pixels_per_meter) {
 	_pixels_per_meter = p_pixels_per_meter;
 	emit_signal(StringName("basis_changed"));
@@ -174,6 +186,7 @@ void World25D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("calculate_draw_order", "vector3"), &World25D::calculate_draw_order);
 	ClassDB::bind_method(D_METHOD("xform_3d_to_2d", "vector3"), &World25D::xform_3d_to_2d);
 	ClassDB::bind_method(D_METHOD("xform_inv_2d_to_3d", "vector2"), &World25D::xform_inv_2d_to_3d);
+	ClassDB::bind_method(D_METHOD("xform_3d_transform_to_2d", "transform", "normalized"), &World25D::xform_3d_transform_to_2d, DEFVAL(true));
 
 	// Constructors.
 	ClassDB::bind_static_method("World25D", D_METHOD("from_custom", "basis"), &World25D::from_custom);

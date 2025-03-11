@@ -26,5 +26,11 @@ public:
 	Vector2 get_zoom() const;
 	void set_zoom(const Vector2 &p_zoom);
 
+	Vector2 viewport_to_world_2d(const Vector2 &p_point) const;
+	Vector2 world_to_viewport_2d(const Vector2 &p_global_world_point) const;
+
+	Vector3 viewport_to_world_3d(const Vector2 &p_point) const;
+	Vector2 world_to_viewport_3d(const Vector3 &p_global_world_point) const;
+
 	Camera25D();
 };

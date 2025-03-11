@@ -48,6 +48,14 @@
 				Transforms a 3D position into a 2D position for rendering in the 2D canvas.
 			</description>
 		</method>
+		<method name="xform_3d_transform_to_2d" qualifiers="const">
+			<return type="Transform2D" />
+			<param index="0" name="transform" type="Transform3D" />
+			<param index="1" name="normalized" type="bool" default="true" />
+			<description>
+				Transforms a 3D transform into a 2D transform for rendering in the 2D canvas. The 2D transform's Y axis will be parallel and flipped compared to the 3D transform's Y axis, and the X axis will be perpendicular to that, such that the transform is conformal (orthogonal and uniform scale) and has no flip. If [param normalized] is [code]true[/code], the 2D transform will have a scale of [code]1.0[/code] (default).
+			</description>
+		</method>
 		<method name="xform_inv_2d_to_3d" qualifiers="const">
 			<return type="Vector3" />
 			<param index="0" name="vector2" type="Vector2" />

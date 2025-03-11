@@ -10,6 +10,7 @@ def configure(env):
 def get_doc_classes():
 	return [
 		"Camera25D",
+		"Line25D",
 		"Node25D",
 		"Sprite25D",
 		"World25D",

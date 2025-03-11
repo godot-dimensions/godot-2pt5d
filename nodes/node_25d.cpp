@@ -16,7 +16,7 @@ void Node25D::_find_or_make_world() {
 			// If the parent is a Node25D, use its world, even if it's null.
 			// The parent should automatically get one when added to the tree,
 			// but if it's not, then this may be intentional by the user.
-			_world = node_25d_parent->get_world();
+			_world = node_25d_parent->get_world_25d();
 			break;
 		}
 		Viewport *viewport = Object::cast_to<Viewport>(parent);
@@ -99,7 +99,7 @@ void Node25D::_get_property_list(List<PropertyInfo> *p_list) const {
 		PropertyInfo &prop = E->get();
 		if (prop.name == StringName("world")) {
 			const Node25D *parent_25d = Object::cast_to<Node25D>(get_parent());
-			if (parent_25d && parent_25d->get_world() == _world) {
+			if (parent_25d && parent_25d->get_world_25d() == _world) {
 				// If the parent has the same world, don't save this node's world into the tscn file.
 				prop.usage = PROPERTY_USAGE_EDITOR;
 			}
@@ -327,13 +327,7 @@ void Node25D::set_local_rotation_2d(const real_t p_rotation) {
 Transform2D Node25D::get_global_transform_2d() const {
 	ERR_FAIL_COND_V_MSG(_world.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
 	const Transform3D global_transform = get_global_transform_3d();
-	const Vector2 pos_2d = _world->xform_3d_to_2d(global_transform.origin);
-	Vector2 down_2d = _world->get_basis().xform_3d_to_2d(-global_transform.basis.get_column(1)).normalized();
-	if (down_2d == Vector2()) {
-		down_2d = Vector2(0, 1);
-	}
-	const Vector2 right_2d = Vector2(down_2d.y, -down_2d.x);
-	return Transform2D(right_2d, down_2d, pos_2d);
+	return _world->xform_3d_transform_to_2d(global_transform);
 }
 
 void Node25D::set_global_transform_2d(const Transform2D &p_transform) {
@@ -379,6 +373,16 @@ void Node25D::set_global_rotation_2d(const real_t p_rotation) {
 	const real_t existing_rotation = get_global_rotation_2d();
 	if (!Math::is_equal_approx(p_rotation, existing_rotation)) {
 		global_rotate_2d(p_rotation - existing_rotation);
+	}
+}
+
+void Node25D::set_world_25d_recursive(const Ref<World25D> &p_world) {
+	_world = p_world;
+	for (int i = 0; i < get_child_count(); i++) {
+		Node25D *node_25d = Object::cast_to<Node25D>(get_child(i));
+		if (node_25d) {
+			node_25d->set_world_25d_recursive(p_world);
+		}
 	}
 }
 
@@ -450,9 +454,9 @@ void Node25D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_global_rotation_2d", "rotation"), &Node25D::set_global_rotation_2d);
 	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "global_rotation_2d", PROPERTY_HINT_NONE, "radians_as_degrees", PROPERTY_USAGE_NONE), "set_global_rotation_2d", "get_global_rotation_2d");
 
-	ClassDB::bind_method(D_METHOD("get_world"), &Node25D::get_world);
-	ClassDB::bind_method(D_METHOD("set_world", "world"), &Node25D::set_world);
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "world", PROPERTY_HINT_RESOURCE_TYPE, "World25D"), "set_world", "get_world");
+	ClassDB::bind_method(D_METHOD("get_world_25d"), &Node25D::get_world_25d);
+	ClassDB::bind_method(D_METHOD("set_world_25d", "world_25d"), &Node25D::set_world_25d);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "world_25d", PROPERTY_HINT_RESOURCE_TYPE, "World25D"), "set_world_25d", "get_world_25d");
 
 	BIND_ENUM_CONSTANT(ROTATION_EDIT_MODE_NONE);
 	BIND_ENUM_CONSTANT(ROTATION_EDIT_MODE_2D_ANGLE);

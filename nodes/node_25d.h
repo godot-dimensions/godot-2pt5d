@@ -104,8 +104,9 @@ public:
 	void global_rotate_2d(const real_t p_rotation);
 	void set_global_rotation_2d(const real_t p_rotation);
 
-	Ref<World25D> get_world() const { return _world; }
-	void set_world(const Ref<World25D> &p_world) { _world = p_world; }
+	Ref<World25D> get_world_25d() const { return _world; }
+	void set_world_25d(const Ref<World25D> &p_world) { _world = p_world; }
+	void set_world_25d_recursive(const Ref<World25D> &p_world);
 	Node25D();
 };
 

@@ -43,28 +43,28 @@
 			The global 3D [Basis] of the node, relative to the world origin.
 		</member>
 		<member name="global_position_2d" type="Vector2" setter="set_global_position_2d" getter="get_global_position_2d">
-			The global 2D position of the node, relative to the world origin. This is calculated from the 3D position and the [member world] property. This property is not recommended to be set, instead set [member global_position_3d] and let the [member world] property handle the conversion to 2D.
+			The global 2D position of the node, relative to the world origin. This is calculated from the 3D position and the [member world_25d] property. This property is not recommended to be set, instead set [member global_position_3d] and let the [member world_25d] property handle the conversion to 2D.
 		</member>
 		<member name="global_position_3d" type="Vector3" setter="set_global_position_3d" getter="get_global_position_3d">
-			The global 3D position of the node, relative to the world origin. The actual 2D position depends on this property and the [member world] property.
+			The global 3D position of the node, relative to the world origin. The actual 2D position depends on this property and the [member world_25d] property.
 		</member>
 		<member name="global_rotation_2d" type="float" setter="set_global_rotation_2d" getter="get_global_rotation_2d">
 			The global 2D rotation of the node, in radians.
 		</member>
 		<member name="global_transform_2d" type="Transform2D" setter="set_global_transform_2d" getter="get_global_transform_2d">
-			The global 2D transform of the node, a combination of both [member global_rotation_2d] and [member global_position_2d]. This property is not recommended to be set, instead set [member global_transform_3d] and let the [member world] property handle the conversion to 2D.
+			The global 2D transform of the node, a combination of both [member global_rotation_2d] and [member global_position_2d]. This property is not recommended to be set, instead set [member global_transform_3d] and let the [member world_25d] property handle the conversion to 2D.
 		</member>
 		<member name="global_transform_3d" type="Transform3D" setter="set_global_transform_3d" getter="get_global_transform_3d">
 			The global 3D transform of the node, a combination of both [member global_basis_3d] and [member global_position_3d].
 		</member>
 		<member name="local_position_2d" type="Vector2" setter="set_local_position_2d" getter="get_local_position_2d">
-			The local 2D position of the node, relative to the parent. This property is recommended to not be set, instead set [member position_3d] and let the [member world] property handle the conversion to 2D.
+			The local 2D position of the node, relative to the parent. This property is recommended to not be set, instead set [member position_3d] and let the [member world_25d] property handle the conversion to 2D.
 		</member>
 		<member name="local_rotation_2d" type="float" setter="set_local_rotation_2d" getter="get_local_rotation_2d">
 			The local 2D rotation of the node, in radians.
 		</member>
 		<member name="local_transform_2d" type="Transform2D" setter="set_local_transform_2d" getter="get_local_transform_2d">
-			The local 2D transform of the node, a combination of both [member local_rotation_2d] and [member local_position_2d]. This property is recommended to not be set, instead set [member transform_3d] and let the [member world] property handle the conversion to 2D.
+			The local 2D transform of the node, a combination of both [member local_rotation_2d] and [member local_position_2d]. This property is recommended to not be set, instead set [member transform_3d] and let the [member world_25d] property handle the conversion to 2D.
 		</member>
 		<member name="position_3d" type="Vector3" setter="set_position_3d" getter="get_position_3d" default="Vector3(0, 0, 0)">
 			The local 3D position of the node, relative to the parent.
@@ -78,7 +78,7 @@
 		<member name="transform_3d" type="Transform3D" setter="set_transform_3d" getter="get_transform_3d">
 			The local 3D transform of the node, a combination of both [member basis_3d] and [member position_3d].
 		</member>
-		<member name="world" type="World25D" setter="set_world" getter="get_world">
+		<member name="world_25d" type="World25D" setter="set_world_25d" getter="get_world_25d">
 			The [World25D] context in which the node exists. It contains a 2.5D basis for converting 3D coordinates into 2D coordinates for rendering in the 2D canvas.
 		</member>
 	</members>
