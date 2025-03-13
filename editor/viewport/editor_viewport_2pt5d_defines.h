@@ -30,7 +30,9 @@
 #endif
 
 #define KEY_E Key::E
+#define KEY_F Key::F
 #define KEY_Q Key::Q
+#define KEY_T Key::T
 #define KEY_W Key::W
 
 #define MOUSE_BUTTON_MASK_MIDDLE MouseButtonMask::MIDDLE

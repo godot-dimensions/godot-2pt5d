@@ -8,7 +8,7 @@ class EditorInputSurface25D : public Control {
 	GDCLASS(EditorInputSurface25D, Control);
 
 	EditorMainScreen25D *_editor_main_screen = nullptr;
-	EditorMainViewport25D *_editor_main_viewport = nullptr;
+	EditorMainViewport25D *_editor_main_viewport_2pt5d = nullptr;
 
 public:
 	static void _bind_methods() {}

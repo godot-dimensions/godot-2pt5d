@@ -65,6 +65,7 @@ void Godot25DEditorPlugin::_inject_2pt5d_scene_button() {
 	ERR_FAIL_NULL(button_3d_scene);
 	// Now that we know where to insert the button, create it.
 	EditorCreate25DSceneButton *button_2pt5d = memnew(EditorCreate25DSceneButton);
+	button_2pt5d->set_name("Create25DSceneButton");
 	button_2pt5d->set_text(TTR("2.5D Scene"));
 	button_2pt5d->set_button_icon(_generate_editor_2pt5d_icon("Node25D"));
 	button_2pt5d->connect(StringName("pressed"), callable_mp(this, &Godot25DEditorPlugin::_create_2pt5d_scene));

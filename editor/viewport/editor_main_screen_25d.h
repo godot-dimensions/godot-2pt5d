@@ -19,19 +19,22 @@ class EditorMainScreen25D : public Control {
 public:
 	// Ensure the MODE items are kept in sync with EditorTransformGizmo25D::GizmoMode.
 	enum ToolbarButton {
-		TOOLBAR_BUTTON_MODE_SELECT, // 0
-		TOOLBAR_BUTTON_MODE_MOVE, // 1
-		TOOLBAR_BUTTON_MODE_ROTATE, // 2
+		TOOLBAR_BUTTON_MODE_SELECT = 0, // 0
+		TOOLBAR_BUTTON_MODE_MOVE = 1, // 1
+		TOOLBAR_BUTTON_MODE_ROTATE = 2, // 2
 		TOOLBAR_BUTTON_MODE_MAX, // 3
-		TOOLBAR_BUTTON_MAX = TOOLBAR_BUTTON_MODE_MAX, // Still 3
+		TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM = TOOLBAR_BUTTON_MODE_MAX, // Still 3
+		TOOLBAR_BUTTON_FOCUS_SELECTED_NODES, // 4
+		TOOLBAR_BUTTON_MAX,
 	};
 
 private:
 	Button *_toolbar_buttons[TOOLBAR_BUTTON_MAX] = { nullptr };
 	HBoxContainer *_toolbar_hbox = nullptr;
-	EditorMainViewport25D *_editor_main_viewport = nullptr;
+	EditorMainViewport25D *_editor_main_viewport_2pt5d = nullptr;
 	Viewport *_edited_scene_viewport = nullptr;
 
+	Button *_focus_selected_nodes = nullptr;
 	Button *_zoom_minus = nullptr;
 	Button *_zoom_reset = nullptr;
 	Button *_zoom_plus = nullptr;

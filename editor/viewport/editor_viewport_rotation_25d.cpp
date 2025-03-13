@@ -35,7 +35,7 @@ void EditorViewportRotation25D::_notification(int p_what) {
 			_update_theme();
 		} break;
 		case NOTIFICATION_DRAW: {
-			if (_editor_main_viewport != nullptr) {
+			if (_editor_main_viewport_2pt5d != nullptr) {
 				_draw();
 			}
 		} break;
@@ -156,7 +156,7 @@ void EditorViewportRotation25D::_draw_filled_arc(const Vector2 &p_center, real_t
 void EditorViewportRotation25D::_get_sorted_axis(const Vector2 &p_center, Vector<Axis2D> &r_axis) {
 	const Vector2 center = get_size() / 2.0f;
 	const real_t radius = center.x - 10.0f * _editor_scale;
-	const Basis25D camera_basis = _editor_main_viewport->get_view_basis_25d();
+	const Basis25D camera_basis = _editor_main_viewport_2pt5d->get_view_basis_25d();
 	// Add axes in each direction.
 	for (int i = 0; i < 3; i++) {
 		const Vector2 axis_2pt5d = camera_basis[i];
@@ -233,7 +233,7 @@ void EditorViewportRotation25D::_process_click(const int p_index, const Vector2 
 		// Only process the click if the mouse is released over the gizmo.
 		// This allows people to click-and-drag to orbit without changing the axis.
 		if (_focused_axis.axis_number > -1) {
-			Ref<World25D> world = _editor_main_viewport->get_world_25d();
+			Ref<World25D> world = _editor_main_viewport_2pt5d->get_world_25d();
 			if (world.is_valid()) {
 				if (_focused_axis.axis_type == AXIS_TYPE_SPECIAL) {
 					switch (_focused_axis.axis_number) {
@@ -294,7 +294,7 @@ void EditorViewportRotation25D::_process_drag(const Ref<InputEventWithModifiers>
 			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
 			_orbiting_mouse_start = p_position;
 		}
-		_editor_main_viewport->navigation_orbit(p_event);
+		_editor_main_viewport_2pt5d->navigation_orbit(p_event);
 		_focused_axis.axis_number = -1;
 	} else {
 		_update_focus();
@@ -326,7 +326,7 @@ void EditorViewportRotation25D::_update_focus() {
 }
 
 void EditorViewportRotation25D::_update_theme() {
-	ERR_FAIL_NULL(_editor_main_viewport);
+	ERR_FAIL_NULL(_editor_main_viewport_2pt5d);
 	_editor_scale = EDSCALE;
 	const real_t scaled_size = GIZMO_BASE_SIZE * _editor_scale;
 	set_custom_minimum_size(Vector2(scaled_size, scaled_size));
@@ -334,7 +334,7 @@ void EditorViewportRotation25D::_update_theme() {
 	set_offset(SIDE_BOTTOM, 1.1f * scaled_size);
 	set_offset(SIDE_LEFT, -1.1f * scaled_size);
 	set_offset(SIDE_TOP, 0.1f * scaled_size);
-	_axis_colors = _editor_main_viewport->get_axis_colors();
+	_axis_colors = _editor_main_viewport_2pt5d->get_axis_colors();
 	queue_redraw();
 }
 
@@ -372,5 +372,5 @@ void EditorViewportRotation25D::setup(EditorMainViewport25D *p_editor_main_viewp
 	set_anchors_and_offsets_preset(Control::PRESET_TOP_RIGHT);
 
 	// Set up things with the arguments (not constructor things).
-	_editor_main_viewport = p_editor_main_viewport;
+	_editor_main_viewport_2pt5d = p_editor_main_viewport;
 }

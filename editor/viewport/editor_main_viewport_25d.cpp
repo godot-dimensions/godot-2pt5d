@@ -67,6 +67,14 @@ Ref<World25D> EditorMainViewport25D::get_world_25d() const {
 	return Ref<World25D>();
 }
 
+void EditorMainViewport25D::selected_nodes_changed(const TypedArray<Node> &p_top_nodes) {
+	// TODO: Pass this to the gizmo.
+}
+
+void EditorMainViewport25D::navigation_focus_selected_nodes() {
+	// TODO: Set to the position of the gizmo.
+}
+
 void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p_input_event) {
 	Vector2 relative = _get_warped_mouse_motion(p_input_event);
 	const real_t degrees_per_pixel = EDITOR_GET("editors/3d/navigation_feel/orbit_sensitivity");
@@ -134,7 +142,15 @@ void EditorMainViewport25D::set_edited_scene_viewport(Viewport *p_edited_scene_v
 	_viewport_rotation_2pt5d->queue_redraw();
 }
 
-void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen) {
+void EditorMainViewport25D::set_gizmo_mode(const int p_gizmo_mode) {
+	// TODO: Pass this to the gizmo.
+}
+
+void EditorMainViewport25D::set_use_local_transform(const bool p_use_local_transform) {
+	// TODO: Pass this to the gizmo.
+}
+
+void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen, EditorUndoRedoManager *p_undo_redo_manager) {
 	// Things that we should do in the constructor but can't in GDExtension
 	// due to how GDExtension runs the constructor for each registered class.
 	set_name(StringName("EditorMainViewport25D"));
@@ -164,8 +180,8 @@ void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen) {
 	_input_surface_2pt5d->add_child(_viewport_rotation_2pt5d);
 
 	// Set up things with the arguments (not constructor things).
-	_editor_main_screen = p_editor_main_screen;
-	_input_surface_2pt5d->setup(_editor_main_screen, this);
+	_editor_main_screen_2pt5d = p_editor_main_screen;
+	_input_surface_2pt5d->setup(p_editor_main_screen, this);
 }
 
 void EditorMainViewport25D::_bind_methods() {

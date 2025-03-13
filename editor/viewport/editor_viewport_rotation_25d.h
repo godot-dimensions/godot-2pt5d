@@ -28,7 +28,7 @@ class EditorViewportRotation25D : public Control {
 		}
 	};
 
-	EditorMainViewport25D *_editor_main_viewport = nullptr;
+	EditorMainViewport25D *_editor_main_viewport_2pt5d = nullptr;
 	PackedColorArray _axis_colors;
 	Axis2D _focused_axis;
 	Vector2i _orbiting_mouse_start;

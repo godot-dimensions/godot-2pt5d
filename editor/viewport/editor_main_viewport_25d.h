@@ -24,7 +24,7 @@ private:
 	SubViewport *_sub_viewport = nullptr;
 	Camera25D *_camera_2pt5d = nullptr;
 	EditorInputSurface25D *_input_surface_2pt5d = nullptr;
-	EditorMainScreen25D *_editor_main_screen = nullptr;
+	EditorMainScreen25D *_editor_main_screen_2pt5d = nullptr;
 	EditorViewportRotation25D *_viewport_rotation_2pt5d = nullptr;
 	Viewport *_edited_scene_viewport = nullptr;
 
@@ -43,6 +43,8 @@ public:
 	PackedColorArray get_axis_colors() const;
 	Basis25D get_view_basis_25d() const;
 	Ref<World25D> get_world_25d() const;
+	void selected_nodes_changed(const TypedArray<Node> &p_top_nodes);
+	void navigation_focus_selected_nodes();
 	void navigation_orbit(const Ref<InputEventMouseMotion> &p_input_event);
 	void navigation_pan(const Ref<InputEventMouseMotion> &p_input_event);
 	void navigation_change_zoom_level(const int p_zoom_level_change, const Vector2 &p_mouse_offset = Vector2());
@@ -51,7 +53,8 @@ public:
 	void viewport_mouse_input(const Ref<InputEventMouse> &p_mouse_event);
 
 	void set_edited_scene_viewport(Viewport *p_edited_scene_viewport);
+	void set_gizmo_mode(const int p_gizmo_mode);
+	void set_use_local_transform(const bool p_use_local_transform);
 
-	// TODO: Pass the transform gizmo to this function.
-	void setup(EditorMainScreen25D *p_editor_main_screen);
+	void setup(EditorMainScreen25D *p_editor_main_screen, EditorUndoRedoManager *p_undo_redo_manager);
 };

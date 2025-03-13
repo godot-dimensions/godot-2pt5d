@@ -29,7 +29,8 @@ void EditorMainScreen25D::_on_button_toggled(const bool p_toggled_on, const int 
 }
 
 void EditorMainScreen25D::_on_selection_changed() {
-	ERR_FAIL_NULL(_editor_main_viewport);
+	ERR_FAIL_NULL(_editor_main_viewport_2pt5d);
+	ERR_FAIL_COND(!is_inside_tree());
 	EditorSelection *selection = EditorInterface::get_singleton()->get_selection();
 	TypedArray<Node> top_selected_nodes;
 #if GDEXTENSION
@@ -40,7 +41,7 @@ void EditorMainScreen25D::_on_selection_changed() {
 		top_selected_nodes.push_back(node);
 	}
 #endif
-	// TODO: Pass the top selected nodes to the transform gizmo.
+	_editor_main_viewport_2pt5d->selected_nodes_changed(top_selected_nodes);
 }
 
 void EditorMainScreen25D::_on_zoom_amount_changed(const double p_zoom_amount) {
@@ -48,7 +49,7 @@ void EditorMainScreen25D::_on_zoom_amount_changed(const double p_zoom_amount) {
 }
 
 void EditorMainScreen25D::_on_zoom_reset_pressed() {
-	_editor_main_viewport->navigation_reset_zoom_level();
+	_editor_main_viewport_2pt5d->navigation_reset_zoom_level();
 	_zoom_reset->set_text("100%");
 }
 
@@ -59,7 +60,7 @@ void EditorMainScreen25D::_update_theme() {
 	_toolbar_hbox->set_offset(Side::SIDE_RIGHT, -4.0f * EDSCALE);
 	_toolbar_hbox->set_offset(Side::SIDE_TOP, 0.0f);
 	_toolbar_hbox->set_offset(Side::SIDE_BOTTOM, 29.5f * EDSCALE);
-	_editor_main_viewport->set_offset(Side::SIDE_TOP, 33.0f * EDSCALE);
+	_editor_main_viewport_2pt5d->set_offset(Side::SIDE_TOP, 33.0f * EDSCALE);
 	// Set minimum sizes for the zoom buttons.
 	_zoom_minus->set_custom_minimum_size(Size2(28.0f, 28.0f) * EDSCALE);
 	_zoom_reset->set_custom_minimum_size(Size2(64.0f, 28.0f) * EDSCALE);
@@ -68,6 +69,8 @@ void EditorMainScreen25D::_update_theme() {
 	_toolbar_buttons[TOOLBAR_BUTTON_MODE_SELECT]->set_button_icon(get_editor_theme_icon(StringName("ToolSelect")));
 	_toolbar_buttons[TOOLBAR_BUTTON_MODE_MOVE]->set_button_icon(get_editor_theme_icon(StringName("ToolMove")));
 	_toolbar_buttons[TOOLBAR_BUTTON_MODE_ROTATE]->set_button_icon(get_editor_theme_icon(StringName("ToolRotate")));
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->set_button_icon(get_editor_theme_icon(StringName("Object")));
+	_focus_selected_nodes->set_button_icon(get_editor_theme_icon(StringName("CenterView")));
 }
 
 void EditorMainScreen25D::_notification(int p_what) {
@@ -76,14 +79,14 @@ void EditorMainScreen25D::_notification(int p_what) {
 			_update_theme();
 		} break;
 		case NOTIFICATION_PROCESS: {
-			ERR_FAIL_NULL(_editor_main_viewport);
+			ERR_FAIL_NULL(_editor_main_viewport_2pt5d);
 			Node *edited_scene_root = EditorInterface::get_singleton()->get_edited_scene_root();
 			if (edited_scene_root == nullptr) {
 				_edited_scene_viewport = nullptr;
 				return;
 			}
 			_edited_scene_viewport = edited_scene_root->get_viewport();
-			_editor_main_viewport->set_edited_scene_viewport(_edited_scene_viewport);
+			_editor_main_viewport_2pt5d->set_edited_scene_viewport(_edited_scene_viewport);
 		} break;
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_theme();
@@ -99,17 +102,23 @@ void EditorMainScreen25D::press_menu_item(const int p_option) {
 			for (int i = 0; i < TOOLBAR_BUTTON_MODE_MAX; i++) {
 				_toolbar_buttons[i]->set_pressed(i == p_option);
 			}
-			// TODO: Pass the gizmo mode to the transform gizmo.
+			_editor_main_viewport_2pt5d->set_gizmo_mode(p_option);
+		} break;
+		case TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM: {
+			_editor_main_viewport_2pt5d->set_use_local_transform(_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->is_pressed());
+		} break;
+		case TOOLBAR_BUTTON_FOCUS_SELECTED_NODES: {
+			_editor_main_viewport_2pt5d->navigation_focus_selected_nodes();
 		} break;
 	}
 }
 
 void EditorMainScreen25D::press_zoom_minus() {
-	_editor_main_viewport->navigation_change_zoom_level(-6);
+	_editor_main_viewport_2pt5d->navigation_change_zoom_level(-6);
 }
 
 void EditorMainScreen25D::press_zoom_plus() {
-	_editor_main_viewport->navigation_change_zoom_level(6);
+	_editor_main_viewport_2pt5d->navigation_change_zoom_level(6);
 }
 
 void EditorMainScreen25D::setup(EditorUndoRedoManager *p_undo_redo_manager) {
@@ -148,18 +157,31 @@ void EditorMainScreen25D::setup(EditorUndoRedoManager *p_undo_redo_manager) {
 	_toolbar_hbox->add_child(_toolbar_buttons[TOOLBAR_BUTTON_MODE_ROTATE]);
 	_toolbar_hbox->add_child(memnew(VSeparator));
 
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM] = memnew(Button);
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->set_toggle_mode(true);
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->set_theme_type_variation("FlatButton");
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->set_tooltip_text(TTR("(T) If pressed, use the object's local transform for the gizmo. Else, transform in global space."));
+	_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]->connect("toggled", callable_mp(this, &EditorMainScreen25D::_on_button_toggled).bind(TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM));
+	_toolbar_hbox->add_child(_toolbar_buttons[TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM]);
+
 	// Set up the viewport.
-	_editor_main_viewport = memnew(EditorMainViewport25D);
-	_editor_main_viewport->set_name(StringName("EditorMainViewport25D"));
-	_editor_main_viewport->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
-	_editor_main_viewport->set_offset(Side::SIDE_TOP, 33.0f * EDSCALE);
-	_editor_main_viewport->setup(this);
-	add_child(_editor_main_viewport);
+	_editor_main_viewport_2pt5d = memnew(EditorMainViewport25D);
+	_editor_main_viewport_2pt5d->set_name(StringName("EditorMainViewport25D"));
+	_editor_main_viewport_2pt5d->set_anchors_and_offsets_preset(Control::PRESET_FULL_RECT);
+	_editor_main_viewport_2pt5d->set_offset(Side::SIDE_TOP, 33.0f * EDSCALE);
+	_editor_main_viewport_2pt5d->setup(this, p_undo_redo_manager);
+	add_child(_editor_main_viewport_2pt5d);
 
 	// Set up the zoom buttons.
 	Control *spacer = memnew(Control);
 	spacer->set_h_size_flags(SIZE_EXPAND_FILL);
 	_toolbar_hbox->add_child(spacer);
+
+	_focus_selected_nodes = memnew(Button);
+	_focus_selected_nodes->set_theme_type_variation("FlatButton");
+	_focus_selected_nodes->set_tooltip_text(TTR("(F) Focus selected nodes."));
+	_focus_selected_nodes->connect(StringName("pressed"), callable_mp(this, &EditorMainScreen25D::press_menu_item).bind(TOOLBAR_BUTTON_FOCUS_SELECTED_NODES));
+	_toolbar_hbox->add_child(_focus_selected_nodes);
 
 	_zoom_minus = memnew(Button);
 	_zoom_minus->set_text("-");
@@ -182,7 +204,7 @@ void EditorMainScreen25D::setup(EditorUndoRedoManager *p_undo_redo_manager) {
 
 	// Connect signals.
 	EditorInterface::get_singleton()->get_selection()->connect(StringName("selection_changed"), callable_mp(this, &EditorMainScreen25D::_on_selection_changed));
-	_editor_main_viewport->connect(StringName("zoom_amount_changed"), callable_mp(this, &EditorMainScreen25D::_on_zoom_amount_changed));
+	_editor_main_viewport_2pt5d->connect(StringName("zoom_amount_changed"), callable_mp(this, &EditorMainScreen25D::_on_zoom_amount_changed));
 
 	set_process(true);
 
