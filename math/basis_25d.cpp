@@ -16,9 +16,9 @@ Vector3 Basis25D::get_row(const int p_row) const {
 	ERR_FAIL_INDEX_V(p_row, 3, Vector3());
 	switch (p_row) {
 		case 0:
-			return Vector3(x.x, y.x, z.x);
+			return Vector3(axes.x.x, axes.y.x, axes.z.x);
 		case 1:
-			return Vector3(x.y, y.y, z.y);
+			return Vector3(axes.x.y, axes.y.y, axes.z.y);
 	}
 	return draw_order;
 }
@@ -27,14 +27,14 @@ void Basis25D::set_row(const int p_row, const Vector3 &p_row_vec) {
 	ERR_FAIL_INDEX(p_row, 3);
 	switch (p_row) {
 		case 0:
-			x.x = p_row_vec.x;
-			y.x = p_row_vec.y;
-			z.x = p_row_vec.z;
+			axes.x.x = p_row_vec.x;
+			axes.y.x = p_row_vec.y;
+			axes.z.x = p_row_vec.z;
 			break;
 		case 1:
-			x.y = p_row_vec.x;
-			y.y = p_row_vec.y;
-			z.y = p_row_vec.z;
+			axes.x.y = p_row_vec.x;
+			axes.y.y = p_row_vec.y;
+			axes.z.y = p_row_vec.z;
 			break;
 		case 2:
 			draw_order = p_row_vec;
@@ -59,7 +59,7 @@ real_t Basis25D::calculate_draw_order(const Vector3 &p_vector3) const {
 }
 
 Vector2 Basis25D::xform_3d_to_2d(const Vector3 &p_vector3) const {
-	return x * p_vector3.x + y * p_vector3.y + z * p_vector3.z;
+	return axes.x * p_vector3.x + axes.y * p_vector3.y + axes.z * p_vector3.z;
 }
 
 Vector3 Basis25D::xform_inv_2d_to_3d(const Vector2 &p_vector2) const {
@@ -68,19 +68,19 @@ Vector3 Basis25D::xform_inv_2d_to_3d(const Vector2 &p_vector2) const {
 }
 
 bool Basis25D::is_equal_approx(const Basis25D &p_b) const {
-	return x.is_equal_approx(p_b.x) && y.is_equal_approx(p_b.y) && z.is_equal_approx(p_b.z) && draw_order.is_equal_approx(p_b.draw_order);
+	return axes.x.is_equal_approx(p_b.axes.x) && axes.y.is_equal_approx(p_b.axes.y) && axes.z.is_equal_approx(p_b.axes.z) && draw_order.is_equal_approx(p_b.draw_order);
 }
 
 Basis25D::operator String() const {
-	return String("[X: ") + x + ", Y: " + y + ", Z: " + z + ", DO: " + draw_order + "]";
+	return String("[X: ") + axes.x + ", Y: " + axes.y + ", Z: " + axes.z + ", DO: " + draw_order + "]";
 }
 
 Basis25D::operator Basis() const {
-	return Basis(Vector3(x.x, x.y, draw_order.x), Vector3(y.x, y.y, draw_order.y), Vector3(z.x, z.y, draw_order.z));
+	return Basis(Vector3(axes.x.x, axes.x.y, draw_order.x), Vector3(axes.y.x, axes.y.y, draw_order.y), Vector3(axes.z.x, axes.z.y, draw_order.z));
 }
 
 Basis25D::operator Transform2D() const {
-	return Transform2D(x, y, z);
+	return Transform2D(axes.x, axes.y, axes.z);
 }
 
 // Constructors.
@@ -140,28 +140,28 @@ Basis25D Basis25D::from_preset(const Preset p_preset, const real_t p_angle, cons
 
 Basis25D::Basis25D() {
 	// Default to 45 degree including a flip to match Godot's +Y-down 2D coordinate system.
-	x = Vector2(1, 0);
-	y = Vector2(0, -Math_SQRT12);
-	z = Vector2(0, Math_SQRT12);
+	axes.x = Vector2(1, 0);
+	axes.y = Vector2(0, -Math_SQRT12);
+	axes.z = Vector2(0, Math_SQRT12);
 	draw_order = Vector3(CMP_EPSILON, Math_SQRT12, Math_SQRT12);
 }
 
 Basis25D::Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, const Vector3 &p_draw_order) {
-	x = p_x;
-	y = p_y;
-	z = p_z;
+	axes.x = p_x;
+	axes.y = p_y;
+	axes.z = p_z;
 	draw_order = p_draw_order;
 }
 
 Basis25D::Basis25D(const Basis &p_b) {
-	x = Vector2(p_b.get_column(0).x, p_b.get_column(0).y);
-	y = Vector2(p_b.get_column(1).x, p_b.get_column(1).y);
-	z = Vector2(p_b.get_column(2).x, p_b.get_column(2).y);
+	axes.x = Vector2(p_b.get_column(0).x, p_b.get_column(0).y);
+	axes.y = Vector2(p_b.get_column(1).x, p_b.get_column(1).y);
+	axes.z = Vector2(p_b.get_column(2).x, p_b.get_column(2).y);
 	draw_order = p_b.rows[2];
 }
 
 Basis25D::Basis25D(const Transform2D &p_t) {
-	x = p_t[0];
-	y = p_t[1];
-	z = p_t[2];
+	axes.x = p_t[0];
+	axes.y = p_t[1];
+	axes.z = p_t[2];
 }

@@ -8,7 +8,7 @@ struct _NO_DISCARD_ Basis25D {
 			Vector2 x;
 			Vector2 y;
 			Vector2 z;
-		};
+		} axes;
 
 		Vector2 coord[3];
 	};
