@@ -1,6 +1,51 @@
 #include "line_25d.h"
 
-void Line25D::_update_points_2d() {
+void Line25D::_notification(int p_what) {
+	Node25D::_notification(p_what);
+	switch (p_what) {
+		case NOTIFICATION_ENTER_TREE:
+		case NOTIFICATION_PROCESS: {
+			update_points_2d();
+		} break;
+	}
+}
+
+Vector3 Line25D::get_point_position(const int p_index) const {
+	ERR_FAIL_INDEX_V(p_index, _points_3d.size(), Vector3());
+	return _points_3d[p_index];
+}
+
+void Line25D::set_point_position(const int p_index, const Vector3 &p_position) {
+	ERR_FAIL_INDEX(p_index, _points_3d.size());
+	_points_3d.set(p_index, p_position);
+	update_points_2d();
+}
+
+int Line25D::get_point_count() const {
+	return _points_3d.size();
+}
+
+void Line25D::add_point(const Vector3 &p_position, const int p_at_index) {
+	if (p_at_index == -1) {
+		_points_3d.push_back(p_position);
+	} else {
+		_points_3d.insert(p_at_index, p_position);
+	}
+	update_points_2d();
+}
+
+void Line25D::remove_point(const int p_index) {
+	ERR_FAIL_INDEX(p_index, _points_3d.size());
+	_points_3d.remove_at(p_index);
+	update_points_2d();
+}
+
+void Line25D::clear_points() {
+	_points_3d.clear();
+	_line_2d->clear_points();
+}
+
+void Line25D::update_points_2d() {
 	const Ref<World25D> world = get_world_25d();
 	if (world.is_null()) {
 		return;
@@ -21,51 +66,6 @@ void Line25D::_update_points_2d() {
 	_line_2d->set_points(points_2d);
 }
 
-void Line25D::_notification(int p_what) {
-	Node25D::_notification(p_what);
-	switch (p_what) {
-		case NOTIFICATION_ENTER_TREE:
-		case NOTIFICATION_PROCESS: {
-			_update_points_2d();
-		} break;
-	}
-}
-
-Vector3 Line25D::get_point_position(const int p_index) const {
-	ERR_FAIL_INDEX_V(p_index, _points_3d.size(), Vector3());
-	return _points_3d[p_index];
-}
-
-void Line25D::set_point_position(const int p_index, const Vector3 &p_position) {
-	ERR_FAIL_INDEX(p_index, _points_3d.size());
-	_points_3d.set(p_index, p_position);
-	_update_points_2d();
-}
-
-int Line25D::get_point_count() const {
-	return _points_3d.size();
-}
-
-void Line25D::add_point(const Vector3 &p_position, const int p_at_index) {
-	if (p_at_index == -1) {
-		_points_3d.push_back(p_position);
-	} else {
-		_points_3d.insert(p_at_index, p_position);
-	}
-	_update_points_2d();
-}
-
-void Line25D::remove_point(const int p_index) {
-	ERR_FAIL_INDEX(p_index, _points_3d.size());
-	_points_3d.remove_at(p_index);
-	_update_points_2d();
-}
-
-void Line25D::clear_points() {
-	_points_3d.clear();
-	_line_2d->clear_points();
-}
-
 // Main properties.
 
 PackedVector3Array Line25D::get_points_3d() const {
@@ -74,7 +74,7 @@ PackedVector3Array Line25D::get_points_3d() const {
 
 void Line25D::set_points_3d(const PackedVector3Array &p_points) {
 	_points_3d = p_points;
-	_update_points_2d();
+	update_points_2d();
 }
 
 bool Line25D::get_is_closed() const {
@@ -142,6 +142,7 @@ void Line25D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_point", "position", "at_index"), &Line25D::add_point, DEFVAL(-1));
 	ClassDB::bind_method(D_METHOD("remove_point", "index"), &Line25D::remove_point);
 	ClassDB::bind_method(D_METHOD("clear_points"), &Line25D::clear_points);
+	ClassDB::bind_method(D_METHOD("update_points_2d"), &Line25D::update_points_2d);
 
 	// Main properties.
 	ClassDB::bind_method(D_METHOD("get_points_3d"), &Line25D::get_points_3d);

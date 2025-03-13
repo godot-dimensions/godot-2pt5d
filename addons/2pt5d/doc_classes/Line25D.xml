@@ -61,6 +61,12 @@
 				Overwrites the position of the point at the given [param index] with the supplied [param position].
 			</description>
 		</method>
+		<method name="update_points_2d">
+			<return type="void" />
+			<description>
+				Updates the 2D points of the internal [Line2D] based on this node's 3D points, transforms, and the [World25D] settings. This is called automatically every frame, and automatically when setting points, but you can call it manually if you need to update the points immediately.
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="begin_cap_mode" type="int" setter="set_begin_cap_mode" getter="get_begin_cap_mode" enum="Line2D.LineCapMode" default="0">

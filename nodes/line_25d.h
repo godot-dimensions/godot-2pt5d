@@ -15,8 +15,6 @@ class Line25D : public Node25D {
 	PackedVector3Array _points_3d;
 	bool _use_node_transform = true;
 
-	void _update_points_2d();
-
 protected:
 	static void _bind_methods();
 	void _notification(int p_what);
@@ -30,6 +28,7 @@ public:
 	void add_point(const Vector3 &p_position, const int p_at_index = -1);
 	void remove_point(const int p_index);
 	void clear_points();
+	void update_points_2d();
 
 	// Main properties.
 	PackedVector3Array get_points_3d() const;
