@@ -16,23 +16,23 @@ void Node25D::_find_or_make_world() {
 			// If the parent is a Node25D, use its world, even if it's null.
 			// The parent should automatically get one when added to the tree,
 			// but if it's not, then this may be intentional by the user.
-			_world = node_25d_parent->get_world_25d();
+			_world_25d = node_25d_parent->get_world_25d();
 			break;
 		}
 		Viewport *viewport = Object::cast_to<Viewport>(parent);
 		if (viewport) {
 			// If we find a Viewport, use its world, or provide one if it doesn't have one.
 			if (viewport->has_meta(StringName("world_25d"))) {
-				_world = viewport->get_meta(StringName("world_25d"));
+				_world_25d = viewport->get_meta(StringName("world_25d"));
 			} else {
-				if (_world.is_null()) {
-					_world.instantiate();
+				if (_world_25d.is_null()) {
+					_world_25d.instantiate();
 				}
-				viewport->set_meta(StringName("world_25d"), _world);
+				viewport->set_meta(StringName("world_25d"), _world_25d);
 			}
 			const Callable update_transform = callable_mp(this, &Node25D::_update_transform_2d);
-			if (!_world->is_connected("basis_changed", update_transform)) {
-				_world->connect("basis_changed", update_transform);
+			if (!_world_25d->is_connected("basis_changed", update_transform)) {
+				_world_25d->connect("basis_changed", update_transform);
 			}
 			break;
 		}
@@ -52,12 +52,12 @@ void Node25D::_give_main_world_to_viewport() {
 			}
 		}
 		// Give the main world to the viewport if it needs one.
-		viewport->set_meta(StringName("world_25d"), _world);
+		viewport->set_meta(StringName("world_25d"), _world_25d);
 	}
 }
 
 void Node25D::_update_transform_2d() {
-	if (_world.is_null()) {
+	if (_world_25d.is_null()) {
 		return;
 	}
 	const Transform2D local_canvas_transform = get_local_transform_2d();
@@ -72,7 +72,7 @@ void Node25D::_update_transform_2d() {
 void Node25D::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE: {
-			if (_world.is_valid() && _world->get_is_main_world()) {
+			if (_world_25d.is_valid() && _world_25d->get_is_main_world()) {
 				// This is expected to be the case for the main scene root node.
 				_give_main_world_to_viewport();
 			} else {
@@ -84,10 +84,10 @@ void Node25D::_notification(int p_what) {
 			_update_transform_2d();
 		} break;
 		case NOTIFICATION_EXIT_TREE: {
-			if (_world.is_valid()) {
+			if (_world_25d.is_valid()) {
 				const Callable update_transform = callable_mp(this, &Node25D::_update_transform_2d);
-				if (_world->is_connected("basis_changed", update_transform)) {
-					_world->disconnect("basis_changed", update_transform);
+				if (_world_25d->is_connected("basis_changed", update_transform)) {
+					_world_25d->disconnect("basis_changed", update_transform);
 				}
 			}
 		} break;
@@ -102,7 +102,7 @@ void Node25D::_get_property_list(List<PropertyInfo> *p_list) const {
 		PropertyInfo &prop = E->get();
 		if (prop.name == StringName("world")) {
 			const Node25D *parent_25d = Object::cast_to<Node25D>(get_parent());
-			if (parent_25d && parent_25d->get_world_25d() == _world) {
+			if (parent_25d && parent_25d->get_world_25d() == _world_25d) {
 				// If the parent has the same world, don't save this node's world into the tscn file.
 				prop.usage = PROPERTY_USAGE_EDITOR;
 			}
@@ -178,7 +178,7 @@ void Node25D::_edit_set_rect(const Rect2 &p_edit_rect) {}
 #endif // TOOLS_ENABLED
 
 Transform2D Node25D::get_transform() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
 	return get_local_transform_2d();
 }
 
@@ -273,7 +273,7 @@ void Node25D::set_global_basis_3d(const Basis &p_basis) {
 // 2.5D local transform.
 
 Transform2D Node25D::get_local_transform_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
 	const Transform2D global_canvas_transform = get_global_transform_2d();
 	const CanvasItem *parent = Object::cast_to<CanvasItem>(get_parent());
 	if (parent) {
@@ -283,7 +283,7 @@ Transform2D Node25D::get_local_transform_2d() const {
 }
 
 void Node25D::set_local_transform_2d(const Transform2D &p_transform) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D transform.");
 	const CanvasItem *parent = Object::cast_to<CanvasItem>(get_parent());
 	if (parent) {
 		set_global_transform_2d(parent->get_global_transform() * p_transform);
@@ -292,12 +292,12 @@ void Node25D::set_local_transform_2d(const Transform2D &p_transform) {
 }
 
 Vector2 Node25D::get_local_position_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), Vector2(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Vector2(), "Node25D must have a World25D to calculate 2D transform.");
 	return get_local_transform_2d().get_origin();
 }
 
 void Node25D::set_local_position_2d(const Vector2 &p_position) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D transform.");
 	const CanvasItem *parent = Object::cast_to<CanvasItem>(get_parent());
 	if (parent) {
 		set_global_position_2d(parent->get_global_transform().xform(p_position));
@@ -307,18 +307,18 @@ void Node25D::set_local_position_2d(const Vector2 &p_position) {
 }
 
 real_t Node25D::get_local_rotation_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), 0.0, "Node25D must have a World25D to calculate 2D rotation.");
-	return _world->calculate_2d_rotation(get_basis_3d().get_column(1));
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), 0.0, "Node25D must have a World25D to calculate 2D rotation.");
+	return _world_25d->calculate_2d_rotation(get_basis_3d().get_column(1));
 }
 
 void Node25D::local_rotate_2d(const real_t p_rotation) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
-	const Basis axis_angle = Basis(_world->get_basis_draw_order(), -p_rotation);
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
+	const Basis axis_angle = Basis(_world_25d->get_basis_draw_order(), -p_rotation);
 	set_basis_3d(axis_angle * get_basis_3d());
 }
 
 void Node25D::set_local_rotation_2d(const real_t p_rotation) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
 	const real_t existing_rotation = get_local_rotation_2d();
 	if (!Math::is_equal_approx(p_rotation, existing_rotation)) {
 		local_rotate_2d(p_rotation - existing_rotation);
@@ -328,51 +328,51 @@ void Node25D::set_local_rotation_2d(const real_t p_rotation) {
 // 2.5D global transform.
 
 Transform2D Node25D::get_global_transform_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
-	const Transform3D global_transform = get_global_transform_3d();
-	return _world->xform_3d_transform_to_2d(global_transform);
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");
+	const Transform3D global_xform = get_global_transform_3d();
+	return _world_25d->xform_3d_transform_to_2d(global_xform);
 }
 
 void Node25D::set_global_transform_2d(const Transform2D &p_transform) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D transform.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D transform.");
 	set_global_position_2d(p_transform.get_origin());
 	set_global_rotation_2d(p_transform.get_rotation());
 }
 
 Vector2 Node25D::get_global_position_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), Vector2(), "Node25D must have a World25D to calculate 2D position.");
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Vector2(), "Node25D must have a World25D to calculate 2D position.");
 	const Vector3 global_pos = get_global_position_3d();
-	return _world->xform_3d_to_2d(global_pos);
+	return _world_25d->xform_3d_to_2d(global_pos);
 }
 
 void Node25D::global_translate_2d(const Vector2 &p_offset) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D position.");
-	const Vector3 movement = _world->xform_inv_2d_to_3d(p_offset);
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D position.");
+	const Vector3 movement = _world_25d->xform_inv_2d_to_3d(p_offset);
 	set_global_position_3d(get_global_position_3d() + movement);
 }
 
 void Node25D::set_global_position_2d(const Vector2 &p_position) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D position.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D position.");
 	const Vector2 current_pos = get_global_position_2d();
 	if (!p_position.is_equal_approx(current_pos)) {
-		const Vector3 movement = _world->xform_inv_2d_to_3d(p_position - current_pos);
+		const Vector3 movement = _world_25d->xform_inv_2d_to_3d(p_position - current_pos);
 		set_global_position_3d(get_global_position_3d() + movement);
 	}
 }
 
 real_t Node25D::get_global_rotation_2d() const {
-	ERR_FAIL_COND_V_MSG(_world.is_null(), 0.0, "Node25D must have a World25D to calculate 2D rotation.");
-	return _world->calculate_2d_rotation(get_global_basis_3d().get_column(1));
+	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), 0.0, "Node25D must have a World25D to calculate 2D rotation.");
+	return _world_25d->calculate_2d_rotation(get_global_basis_3d().get_column(1));
 }
 
 void Node25D::global_rotate_2d(const real_t p_rotation) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
-	const Basis axis_angle = Basis(_world->get_basis_draw_order(), -p_rotation);
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
+	const Basis axis_angle = Basis(_world_25d->get_basis_draw_order(), -p_rotation);
 	set_global_basis_3d(axis_angle * get_global_basis_3d());
 }
 
 void Node25D::set_global_rotation_2d(const real_t p_rotation) {
-	ERR_FAIL_COND_MSG(_world.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
+	ERR_FAIL_COND_MSG(_world_25d.is_null(), "Node25D must have a World25D to calculate 2D rotation.");
 	const real_t existing_rotation = get_global_rotation_2d();
 	if (!Math::is_equal_approx(p_rotation, existing_rotation)) {
 		global_rotate_2d(p_rotation - existing_rotation);
@@ -380,7 +380,7 @@ void Node25D::set_global_rotation_2d(const real_t p_rotation) {
 }
 
 void Node25D::set_world_25d_recursive(const Ref<World25D> &p_world) {
-	_world = p_world;
+	_world_25d = p_world;
 	for (int i = 0; i < get_child_count(); i++) {
 		Node25D *node_25d = Object::cast_to<Node25D>(get_child(i));
 		if (node_25d) {

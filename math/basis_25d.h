@@ -68,7 +68,6 @@ struct _NO_DISCARD_ Basis25D {
 	static Basis25D from_preset(const Preset p_preset = PRESET_FROM_ANGLE, const real_t p_angle = Math_TAU / 8.0, const real_t p_angle_z = Math_TAU / 16.0);
 	Basis25D();
 	Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, const Vector3 &p_draw_order);
-	Basis25D(const Basis25D &p_b);
 	Basis25D(const Basis &p_b);
 	Basis25D(const Transform2D &p_t);
 };

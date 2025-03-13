@@ -153,13 +153,6 @@ Basis25D::Basis25D(const Vector2 &p_x, const Vector2 &p_y, const Vector2 &p_z, c
 	draw_order = p_draw_order;
 }
 
-Basis25D::Basis25D(const Basis25D &p_b) {
-	x = p_b.x;
-	y = p_b.y;
-	z = p_b.z;
-	draw_order = p_b.draw_order;
-}
-
 Basis25D::Basis25D(const Basis &p_b) {
 	x = Vector2(p_b.get_column(0).x, p_b.get_column(0).y);
 	y = Vector2(p_b.get_column(1).x, p_b.get_column(1).y);

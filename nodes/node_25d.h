@@ -30,7 +30,7 @@ public:
 
 private:
 	Transform3D _transform;
-	Ref<World25D> _world;
+	Ref<World25D> _world_25d;
 	RotationEditMode _rotation_edit_mode = ROTATION_EDIT_MODE_NONE;
 
 	void _find_or_make_world();
@@ -104,8 +104,8 @@ public:
 	void global_rotate_2d(const real_t p_rotation);
 	void set_global_rotation_2d(const real_t p_rotation);
 
-	Ref<World25D> get_world_25d() const { return _world; }
-	void set_world_25d(const Ref<World25D> &p_world) { _world = p_world; }
+	Ref<World25D> get_world_25d() const { return _world_25d; }
+	void set_world_25d(const Ref<World25D> &p_world) { _world_25d = p_world; }
 	void set_world_25d_recursive(const Ref<World25D> &p_world);
 	Node25D();
 };
