@@ -1,6 +1,7 @@
 #include "editor_main_screen_25d.h"
 
 #include "editor_main_viewport_25d.h"
+#include "editor_transform_gizmo_25d.h"
 #include "editor_viewport_rotation_25d.h"
 
 #if GDEXTENSION

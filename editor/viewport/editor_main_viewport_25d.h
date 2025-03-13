@@ -2,6 +2,8 @@
 
 #include "editor_viewport_2pt5d_defines.h"
 
+#include "editor_transform_gizmo_25d.h"
+
 #include "../../nodes/camera_25d.h"
 
 #if GDEXTENSION
@@ -25,6 +27,7 @@ private:
 	Camera25D *_camera_2pt5d = nullptr;
 	EditorInputSurface25D *_input_surface_2pt5d = nullptr;
 	EditorMainScreen25D *_editor_main_screen_2pt5d = nullptr;
+	EditorTransformGizmo25D *_transform_gizmo_2pt5d = nullptr;
 	EditorViewportRotation25D *_viewport_rotation_2pt5d = nullptr;
 	Viewport *_edited_scene_viewport = nullptr;
 

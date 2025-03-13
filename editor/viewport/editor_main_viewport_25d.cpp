@@ -1,6 +1,7 @@
 #include "editor_main_viewport_25d.h"
 
 #include "editor_input_surface_25d.h"
+#include "editor_transform_gizmo_25d.h"
 #include "editor_viewport_rotation_25d.h"
 
 #if GDEXTENSION
@@ -25,7 +26,8 @@ void EditorMainViewport25D::_update_theme() {
 	_axis_colors.push_back(get_theme_color(StringName("axis_y_color"), StringName("Editor")));
 	_axis_colors.push_back(get_theme_color(StringName("axis_z_color"), StringName("Editor")));
 	_axis_colors.push_back(get_theme_color(StringName("accent_color"), StringName("Editor")));
-	// TODO: Pass the axis colors to the transform gizmo.
+	ERR_FAIL_NULL(_transform_gizmo_2pt5d);
+	_transform_gizmo_2pt5d->theme_changed(_axis_colors);
 }
 
 void EditorMainViewport25D::_notification(int p_what) {
@@ -68,11 +70,11 @@ Ref<World25D> EditorMainViewport25D::get_world_25d() const {
 }
 
 void EditorMainViewport25D::selected_nodes_changed(const TypedArray<Node> &p_top_nodes) {
-	// TODO: Pass this to the gizmo.
+	_transform_gizmo_2pt5d->selected_nodes_changed(p_top_nodes);
 }
 
 void EditorMainViewport25D::navigation_focus_selected_nodes() {
-	// TODO: Set to the position of the gizmo.
+	_camera_2pt5d->set_global_position_2d(_transform_gizmo_2pt5d->get_global_position_2d());
 }
 
 void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p_input_event) {
@@ -132,7 +134,10 @@ void EditorMainViewport25D::navigation_reset_zoom_level() {
 }
 
 void EditorMainViewport25D::viewport_mouse_input(const Ref<InputEventMouse> &p_mouse_event) {
-	// TODO: Pass the mouse input to the transform gizmo.
+	const bool used_by_gizmo = _transform_gizmo_2pt5d->gizmo_mouse_input(p_mouse_event);
+	if (used_by_gizmo) {
+		return;
+	}
 	// TODO: Try to make a selection if the transform gizmo didn't use the mouse.
 }
 
@@ -142,12 +147,12 @@ void EditorMainViewport25D::set_edited_scene_viewport(Viewport *p_edited_scene_v
 	_viewport_rotation_2pt5d->queue_redraw();
 }
 
-void EditorMainViewport25D::set_gizmo_mode(const int p_gizmo_mode) {
-	// TODO: Pass this to the gizmo.
+void EditorMainViewport25D::set_gizmo_mode(const int p_mode) {
+	_transform_gizmo_2pt5d->set_gizmo_mode((EditorTransformGizmo25D::GizmoMode)p_mode);
 }
 
 void EditorMainViewport25D::set_use_local_transform(const bool p_use_local_transform) {
-	// TODO: Pass this to the gizmo.
+	_transform_gizmo_2pt5d->set_use_local_transform(p_use_local_transform);
 }
 
 void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen, EditorUndoRedoManager *p_undo_redo_manager) {
@@ -171,9 +176,13 @@ void EditorMainViewport25D::setup(EditorMainScreen25D *p_editor_main_screen, Edi
 	_camera_2pt5d = memnew(Camera25D);
 	_sub_viewport->add_child(_camera_2pt5d);
 
-	// Set up the input surface and viewport rotation gizmo.
+	// Set up the input surface and gizmos.
 	_input_surface_2pt5d = memnew(EditorInputSurface25D);
 	_sub_viewport_container->add_child(_input_surface_2pt5d);
+
+	_transform_gizmo_2pt5d = memnew(EditorTransformGizmo25D);
+	_transform_gizmo_2pt5d->setup(_camera_2pt5d, p_undo_redo_manager);
+	_sub_viewport->add_child(_transform_gizmo_2pt5d);
 
 	_viewport_rotation_2pt5d = memnew(EditorViewportRotation25D);
 	_viewport_rotation_2pt5d->setup(this);

@@ -45,4 +45,5 @@
 class EditorInputSurface25D;
 class EditorMainScreen25D;
 class EditorMainViewport25D;
+class EditorTransformGizmo25D;
 class EditorViewportRotation25D;

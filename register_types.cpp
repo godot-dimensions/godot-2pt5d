@@ -30,6 +30,7 @@
 #include "editor/viewport/editor_input_surface_25d.h"
 #include "editor/viewport/editor_main_screen_25d.h"
 #include "editor/viewport/editor_main_viewport_25d.h"
+#include "editor/viewport/editor_transform_gizmo_25d.h"
 #include "editor/viewport/editor_viewport_rotation_25d.h"
 #endif // TOOLS_ENABLED
 #endif // GDEXTENSION
@@ -65,6 +66,7 @@ void initialize_2pt5d_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(EditorInputSurface25D);
 		GDREGISTER_CLASS(EditorMainScreen25D);
 		GDREGISTER_CLASS(EditorMainViewport25D);
+		GDREGISTER_CLASS(EditorTransformGizmo25D);
 		GDREGISTER_CLASS(EditorViewportRotation25D);
 		GDREGISTER_CLASS(Godot25DEditorPlugin);
 #elif GODOT_MODULE
