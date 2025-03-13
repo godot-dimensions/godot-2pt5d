@@ -5,6 +5,7 @@
 
 void EditorInputSurface25D::GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_event) {
 	ERR_FAIL_COND(p_event.is_null());
+	ERR_FAIL_NULL(_editor_main_screen);
 	Ref<InputEventMouseButton> mouse_button = p_event;
 	if (mouse_button.is_valid()) {
 		MouseButton mouse_button_index = mouse_button->get_button_index();

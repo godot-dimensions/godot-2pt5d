@@ -48,9 +48,8 @@ inline void remove_godot_singleton(const StringName &p_singleton_name) {
 
 void initialize_2pt5d_module(ModuleInitializationLevel p_level) {
 	// Note: Classes MUST be registered in inheritance order.
-	if (p_level == MODULE_INITIALIZATION_LEVEL_CORE) {
+	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(World25D);
-	} else if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(Node25D);
 		GDREGISTER_CLASS(Camera25D);
 		GDREGISTER_CLASS(Line25D);

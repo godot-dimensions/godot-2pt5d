@@ -72,7 +72,6 @@ Vector2 Camera25D::world_to_viewport_3d(const Vector3 &p_global_point) const {
 Camera25D::Camera25D() {
 	_camera_2d = memnew(Camera2D);
 	add_child(_camera_2d);
-	set_process(true);
 }
 
 void Camera25D::_bind_methods() {

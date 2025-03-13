@@ -30,7 +30,10 @@ void Node25D::_find_or_make_world() {
 				}
 				viewport->set_meta(StringName("world_25d"), _world);
 			}
-			_world->connect("basis_changed", callable_mp(this, &Node25D::_update_transform_2d));
+			const Callable update_transform = callable_mp(this, &Node25D::_update_transform_2d);
+			if (!_world->is_connected("basis_changed", update_transform)) {
+				_world->connect("basis_changed", update_transform);
+			}
 			break;
 		}
 		parent = parent->get_parent();

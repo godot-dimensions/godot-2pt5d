@@ -19,18 +19,6 @@
 class EditorMainViewport25D : public Control {
 	GDCLASS(EditorMainViewport25D, Control);
 
-public:
-	// Keep the first items in sync with EditorTransformGizmo25D.
-	enum ToolbarButton {
-		TOOLBAR_BUTTON_SELECT, // 0
-		TOOLBAR_BUTTON_MOVE, // 1
-		TOOLBAR_BUTTON_ROTATE, // 2
-		TOOLBAR_BUTTON_SCALE, // 3
-		TOOLBAR_BUTTON_MODE_MAX, // 4
-		TOOLBAR_BUTTON_USE_LOCAL_TRANSFORM = TOOLBAR_BUTTON_MODE_MAX, // Still 4
-		TOOLBAR_BUTTON_MAX
-	};
-
 private:
 	SubViewportContainer *_sub_viewport_container = nullptr;
 	SubViewport *_sub_viewport = nullptr;

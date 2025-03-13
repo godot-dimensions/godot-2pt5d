@@ -43,7 +43,7 @@ void EditorCreate25DSceneButton::_notification(int p_what) {
 void Godot25DEditorPlugin::_move_2pt5d_main_screen_tab_button() const {
 	Control *editor = EditorInterface::get_singleton()->get_base_control();
 	ERR_FAIL_NULL(editor);
-	// Move 4D button to the left of the "Script" button, to the right of the "3D" button.
+	// Move 2.5D button to the left of the "3D" button, to the right of the "2D" button.
 	Node *button_asset_lib_tab = editor->find_child("AssetLib", true, false);
 	ERR_FAIL_NULL(button_asset_lib_tab);
 	Node *main_editor_button_hbox = button_asset_lib_tab->get_parent();
@@ -107,6 +107,7 @@ bool Godot25DEditorPlugin::GDEXTMOD_HANDLES(Object *p_object) const {
 }
 
 void Godot25DEditorPlugin::GDEXTMOD_MAKE_VISIBLE(bool p_visible) {
+	ERR_FAIL_NULL(_main_screen);
 	_main_screen->set_visible(p_visible);
 }
 
@@ -115,9 +116,9 @@ void Godot25DEditorPlugin::_bind_methods() {
 }
 
 Godot25DEditorPlugin::Godot25DEditorPlugin() {
-	set_name(StringName("Godot2.5DEditorPlugin"));
+	set_name(StringName("Godot25DEditorPlugin"));
 	Control *godot_editor_main_screen = EditorInterface::get_singleton()->get_editor_main_screen();
-	if (godot_editor_main_screen->has_node(NodePath("EditorMainScreen4D"))) {
+	if (godot_editor_main_screen->has_node(NodePath("EditorMainScreen25D"))) {
 		_main_screen = GET_NODE_TYPE(godot_editor_main_screen, EditorMainScreen25D, "EditorMainScreen25D");
 	} else {
 		_main_screen = memnew(EditorMainScreen25D);

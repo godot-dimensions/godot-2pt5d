@@ -24,6 +24,7 @@ void EditorMainViewport25D::_update_theme() {
 	_axis_colors.push_back(get_theme_color(StringName("axis_x_color"), StringName("Editor")));
 	_axis_colors.push_back(get_theme_color(StringName("axis_y_color"), StringName("Editor")));
 	_axis_colors.push_back(get_theme_color(StringName("axis_z_color"), StringName("Editor")));
+	_axis_colors.push_back(get_theme_color(StringName("accent_color"), StringName("Editor")));
 	// TODO: Pass the axis colors to the transform gizmo.
 }
 
@@ -33,6 +34,7 @@ void EditorMainViewport25D::_notification(int p_what) {
 			_update_theme();
 		} break;
 		case NOTIFICATION_READY: {
+			ERR_FAIL_NULL(_camera_2pt5d);
 			_camera_2pt5d->make_current();
 		} break;
 		case NOTIFICATION_THEME_CHANGED: {

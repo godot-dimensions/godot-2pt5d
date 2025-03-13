@@ -29,6 +29,7 @@ void EditorMainScreen25D::_on_button_toggled(const bool p_toggled_on, const int 
 }
 
 void EditorMainScreen25D::_on_selection_changed() {
+	ERR_FAIL_NULL(_editor_main_viewport);
 	EditorSelection *selection = EditorInterface::get_singleton()->get_selection();
 	TypedArray<Node> top_selected_nodes;
 #if GDEXTENSION
@@ -52,6 +53,7 @@ void EditorMainScreen25D::_on_zoom_reset_pressed() {
 }
 
 void EditorMainScreen25D::_update_theme() {
+	ERR_FAIL_NULL(_toolbar_hbox);
 	// Set the toolbar offsets. Note that these numbers are designed to match Godot's 2D and 3D editor toolbars.
 	_toolbar_hbox->set_offset(Side::SIDE_LEFT, 4.0f * EDSCALE);
 	_toolbar_hbox->set_offset(Side::SIDE_RIGHT, -4.0f * EDSCALE);
@@ -74,6 +76,7 @@ void EditorMainScreen25D::_notification(int p_what) {
 			_update_theme();
 		} break;
 		case NOTIFICATION_PROCESS: {
+			ERR_FAIL_NULL(_editor_main_viewport);
 			Node *edited_scene_root = EditorInterface::get_singleton()->get_edited_scene_root();
 			if (edited_scene_root == nullptr) {
 				_edited_scene_viewport = nullptr;
@@ -81,7 +84,7 @@ void EditorMainScreen25D::_notification(int p_what) {
 			}
 			_edited_scene_viewport = edited_scene_root->get_viewport();
 			_editor_main_viewport->set_edited_scene_viewport(_edited_scene_viewport);
-		}
+		} break;
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_theme();
 		} break;

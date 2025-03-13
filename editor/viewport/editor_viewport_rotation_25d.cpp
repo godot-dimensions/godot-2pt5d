@@ -326,6 +326,7 @@ void EditorViewportRotation25D::_update_focus() {
 }
 
 void EditorViewportRotation25D::_update_theme() {
+	ERR_FAIL_NULL(_editor_main_viewport);
 	_editor_scale = EDSCALE;
 	const real_t scaled_size = GIZMO_BASE_SIZE * _editor_scale;
 	set_custom_minimum_size(Vector2(scaled_size, scaled_size));
