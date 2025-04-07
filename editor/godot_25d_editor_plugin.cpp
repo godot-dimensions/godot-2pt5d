@@ -18,7 +18,7 @@
 #endif
 #endif
 
-Button *Godot25DEditorPlugin::_find_button_by_text(Node *p_start, const String &p_text) {
+Button *Godot25DEditorPlugin::_find_button_by_text_2pt5d(Node *p_start, const String &p_text) {
 	Button *start_button = Object::cast_to<Button>(p_start);
 	if (start_button != nullptr) {
 		if (start_button->get_text() == p_text) {
@@ -26,7 +26,7 @@ Button *Godot25DEditorPlugin::_find_button_by_text(Node *p_start, const String &
 		}
 	}
 	for (int i = 0; i < p_start->get_child_count(); i++) {
-		Button *button = _find_button_by_text(p_start->get_child(i), p_text);
+		Button *button = _find_button_by_text_2pt5d(p_start->get_child(i), p_text);
 		if (button != nullptr) {
 			return button;
 		}
@@ -58,10 +58,10 @@ void Godot25DEditorPlugin::_inject_2pt5d_scene_button() {
 	Control *editor = EditorInterface::get_singleton()->get_base_control();
 	ERR_FAIL_NULL(editor);
 	// Add a "2.5D Scene" button above the "3D Scene" button, below the "2D Scene" button.
-	Button *button_other_node_scene = _find_button_by_text(editor, "Other Node");
+	Button *button_other_node_scene = _find_button_by_text_2pt5d(editor, "Other Node");
 	ERR_FAIL_NULL(button_other_node_scene);
 	Control *beginner_node_shortcuts = Object::cast_to<Control>(button_other_node_scene->get_parent()->get_child(0));
-	Button *button_3d_scene = _find_button_by_text(beginner_node_shortcuts, "3D Scene");
+	Button *button_3d_scene = _find_button_by_text_2pt5d(beginner_node_shortcuts, "3D Scene");
 	ERR_FAIL_NULL(button_3d_scene);
 	// Now that we know where to insert the button, create it.
 	EditorCreate25DSceneButton *button_2pt5d = memnew(EditorCreate25DSceneButton);

@@ -11,7 +11,7 @@
 #endif
 
 // How far apart the axis circles are from the center of the gizmo.
-constexpr float GIZMO_BASE_SIZE = 80.0f;
+constexpr float GIZMO_BASE_SIZE_25D = 80.0f;
 
 String _get_axis_letter_2pt5d(int p_axis) {
 	switch (p_axis) {
@@ -328,7 +328,7 @@ void EditorViewportRotation25D::_update_focus() {
 void EditorViewportRotation25D::_update_theme() {
 	ERR_FAIL_NULL(_editor_main_viewport_2pt5d);
 	_editor_scale = EDSCALE;
-	const real_t scaled_size = GIZMO_BASE_SIZE * _editor_scale;
+	const real_t scaled_size = GIZMO_BASE_SIZE_25D * _editor_scale;
 	set_custom_minimum_size(Vector2(scaled_size, scaled_size));
 	set_offset(SIDE_RIGHT, -0.1f * scaled_size);
 	set_offset(SIDE_BOTTOM, 1.1f * scaled_size);
