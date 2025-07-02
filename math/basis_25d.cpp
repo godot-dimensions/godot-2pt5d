@@ -72,7 +72,7 @@ bool Basis25D::is_equal_approx(const Basis25D &p_b) const {
 }
 
 Basis25D::operator String() const {
-	return String("[X: ") + axes.x + ", Y: " + axes.y + ", Z: " + axes.z + ", DO: " + draw_order + "]";
+	return String("[X: ") + axes.x.operator String() + ", Y: " + axes.y.operator String() + ", Z: " + axes.z.operator String() + ", DO: " + draw_order.operator String() + "]";
 }
 
 Basis25D::operator Basis() const {
