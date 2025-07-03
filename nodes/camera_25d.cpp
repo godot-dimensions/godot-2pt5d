@@ -28,7 +28,9 @@ void Camera25D::set_zoom(const Vector2 &p_zoom) {
 }
 
 Vector2 Camera25D::viewport_to_world_2d(const Vector2 &p_viewport_point) const {
-	const Vector2 viewport_size = get_viewport()->call(StringName("get_size"));
+	Viewport *viewport = get_viewport();
+	ERR_FAIL_COND_V_MSG(viewport == nullptr, Vector2(), "Camera25D must be in the scene tree to convert viewport coordinates to world coordinates.");
+	const Vector2 viewport_size = viewport->call(StringName("get_size"));
 	const Vector2 zoom = get_zoom();
 	const Vector2 local_vp = (p_viewport_point - viewport_size * 0.5f) / zoom;
 	const Transform2D global_transform_2d = get_global_transform_2d();
@@ -39,6 +41,8 @@ Vector2 Camera25D::viewport_to_world_2d(const Vector2 &p_viewport_point) const {
 }
 
 Vector2 Camera25D::world_to_viewport_2d(const Vector2 &p_global_world_point) const {
+	Viewport *viewport = get_viewport();
+	ERR_FAIL_COND_V_MSG(viewport == nullptr, Vector2(), "Camera25D must be in the scene tree to convert world coordinates to viewport coordinates.");
 	const Transform2D global_transform_2d = get_global_transform_2d();
 	Vector2 local_vp;
 	if (_camera_2d->is_ignoring_rotation()) {
@@ -46,7 +50,7 @@ Vector2 Camera25D::world_to_viewport_2d(const Vector2 &p_global_world_point) con
 	} else {
 		local_vp = global_transform_2d.affine_inverse().xform(p_global_world_point);
 	}
-	const Vector2 viewport_size = get_viewport()->call(StringName("get_size"));
+	const Vector2 viewport_size = viewport->call(StringName("get_size"));
 	const Vector2 zoom = get_zoom();
 	return local_vp * zoom + viewport_size * 0.5f;
 }
