@@ -68,7 +68,7 @@
 		<member name="basis" type="Basis" setter="set_basis" getter="get_basis">
 			The 2.5D basis for converting 3D coordinates into 2D coordinates for rendering in the 2D canvas. This is packed into a [Basis] for serializing and exposing via [Variant], but is actually a 2-row 3-column matrix of three [Vector2] values, plus a [Vector3] row at the bottom for the draw order.
 		</member>
-		<member name="basis_angle" type="float" setter="set_basis_angle" getter="get_basis_angle" default="0.785398">
+		<member name="basis_angle" type="float" setter="set_basis_angle" getter="get_basis_angle" default="0.7853982">
 			The primary angle used by some 2.5D basis presets. This is used by "From Angle" for the angle in the YZ plane, by "Dimetric" for the angle between X/Z and the horizontal, and by "Trimetric" for the angle between X and the horizontal. This is in radians.
 		</member>
 		<member name="basis_angle_z" type="float" setter="set_basis_angle_z" getter="get_basis_angle_z">
