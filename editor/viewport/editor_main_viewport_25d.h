@@ -1,10 +1,8 @@
 #pragma once
 
-#include "editor_viewport_2pt5d_defines.h"
-
-#include "editor_transform_gizmo_25d.h"
-
 #include "../../nodes/camera_25d.h"
+#include "editor_transform_gizmo_25d.h"
+#include "editor_viewport_2pt5d_defines.h"
 
 #if GDEXTENSION
 #include <godot_cpp/classes/input_event_mouse_motion.hpp>

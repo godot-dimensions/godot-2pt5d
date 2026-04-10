@@ -1,9 +1,8 @@
 #pragma once
 
-#include "editor_viewport_2pt5d_defines.h"
-
 #include "../../nodes/camera_25d.h"
 #include "../../nodes/line_25d.h"
+#include "editor_viewport_2pt5d_defines.h"
 
 class EditorTransformGizmo25D : public Node25D {
 	GDCLASS(EditorTransformGizmo25D, Node25D);

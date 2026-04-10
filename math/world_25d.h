@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../godot_2pt5d_defines.h"
-
 #include "basis_25d.h"
 
 #if GDEXTENSION
