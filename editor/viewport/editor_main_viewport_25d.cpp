@@ -5,18 +5,27 @@
 #include "editor_viewport_rotation_25d.h"
 
 #if GDEXTENSION
+#include <godot_cpp/classes/input_event_screen_drag.hpp>
 #include <godot_cpp/classes/world2d.hpp>
 #elif GODOT_MODULE
 #include "scene/resources/world_2d.h"
 #endif
 
-Vector2 EditorMainViewport25D::_get_warped_mouse_motion(const Ref<InputEventMouseMotion> &p_ev_mouse_motion) const {
+Vector2 EditorMainViewport25D::_get_warped_mouse_motion(const Ref<InputEvent> &p_input_event) const {
+	Ref<InputEventMouseMotion> ev_mouse_motion = p_input_event;
+	if (ev_mouse_motion.is_valid()) {
 #if GODOT_MODULE
-	if (bool(EDITOR_GET("editors/3d/navigation/warped_mouse_panning"))) {
-		return Input::get_singleton()->warp_mouse_motion(p_ev_mouse_motion, _input_surface_2pt5d->get_global_rect());
-	}
+		if (bool(EDITOR_GET("editors/3d/navigation/warped_mouse_panning"))) {
+			return Input::get_singleton()->warp_mouse_motion(ev_mouse_motion, _input_surface_2pt5d->get_global_rect());
+		}
 #endif // GODOT_MODULE
-	return p_ev_mouse_motion->get_relative();
+		return ev_mouse_motion->get_relative();
+	}
+	Ref<InputEventScreenDrag> ev_screen_drag = p_input_event;
+	if (ev_screen_drag.is_valid()) {
+		return ev_screen_drag->get_relative();
+	}
+	ERR_FAIL_V_MSG(Vector2(), "Expected InputEventMouseMotion or InputEventScreenDrag.");
 }
 
 void EditorMainViewport25D::_update_theme() {
@@ -77,7 +86,7 @@ void EditorMainViewport25D::navigation_focus_selected_nodes() {
 	_camera_2pt5d->set_global_position_2d(_transform_gizmo_2pt5d->get_global_position_2d());
 }
 
-void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p_input_event) {
+void EditorMainViewport25D::navigation_orbit(const Ref<InputEvent> &p_input_event) {
 	Vector2 relative = _get_warped_mouse_motion(p_input_event);
 	const real_t degrees_per_pixel = EDITOR_GET("editors/3d/navigation_feel/orbit_sensitivity");
 	const real_t radians_per_pixel = Math::deg_to_rad(degrees_per_pixel);
@@ -109,7 +118,7 @@ void EditorMainViewport25D::navigation_orbit(const Ref<InputEventMouseMotion> &p
 	_viewport_rotation_2pt5d->queue_redraw();
 }
 
-void EditorMainViewport25D::navigation_pan(const Ref<InputEventMouseMotion> &p_input_event) {
+void EditorMainViewport25D::navigation_pan(const Ref<InputEvent> &p_input_event) {
 	const Vector2 relative = _get_warped_mouse_motion(p_input_event);
 	_camera_2pt5d->global_translate_2d(-relative / _camera_2pt5d->get_zoom());
 }

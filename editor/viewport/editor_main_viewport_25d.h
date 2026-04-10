@@ -32,7 +32,7 @@ private:
 	PackedColorArray _axis_colors;
 	int _zoom_level = 0;
 
-	Vector2 _get_warped_mouse_motion(const Ref<InputEventMouseMotion> &p_ev_mouse_motion) const;
+	Vector2 _get_warped_mouse_motion(const Ref<InputEvent> &p_input_event) const;
 	void _on_button_toggled(const bool p_toggled_on, const int p_option);
 	void _update_theme();
 
@@ -46,8 +46,8 @@ public:
 	Ref<World25D> get_world_25d() const;
 	void selected_nodes_changed(const TypedArray<Node> &p_top_nodes);
 	void navigation_focus_selected_nodes();
-	void navigation_orbit(const Ref<InputEventMouseMotion> &p_input_event);
-	void navigation_pan(const Ref<InputEventMouseMotion> &p_input_event);
+	void navigation_orbit(const Ref<InputEvent> &p_input_event);
+	void navigation_pan(const Ref<InputEvent> &p_input_event);
 	void navigation_change_zoom_level(const int p_zoom_level_change, const Vector2 &p_mouse_offset = Vector2());
 	void navigation_reset_zoom_level();
 	double navigation_get_zoom_amount() const;

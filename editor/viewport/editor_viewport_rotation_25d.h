@@ -42,7 +42,7 @@ class EditorViewportRotation25D : public Control {
 	void _get_sorted_axis(const Vector2 &p_center, Vector<Axis2D> &r_axis);
 	void _on_mouse_exited();
 	void _process_click(const int p_index, const Vector2 p_position, const bool p_pressed, const bool p_modifier);
-	void _process_drag(const Ref<InputEventWithModifiers> &p_event, const int p_index, const Vector2 p_position);
+	void _process_drag(const Ref<InputEvent> &p_event, const int p_index, const Vector2 p_position);
 	void _update_focus();
 	void _update_theme();
 

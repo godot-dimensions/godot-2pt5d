@@ -288,7 +288,7 @@ void EditorViewportRotation25D::_process_click(const int p_index, const Vector2 
 	queue_redraw();
 }
 
-void EditorViewportRotation25D::_process_drag(const Ref<InputEventWithModifiers> &p_event, const int p_index, const Vector2 p_position) {
+void EditorViewportRotation25D::_process_drag(const Ref<InputEvent> &p_event, const int p_index, const Vector2 p_position) {
 	if (_orbiting_mouse_button_index == p_index) {
 		if (Input::get_singleton()->get_mouse_mode() == Input::MOUSE_MODE_VISIBLE) {
 			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
