@@ -14,11 +14,14 @@
 
 #if GDEXTENSION
 // Extremely common classes used by most files. Customize for your extension as needed.
+#include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/version.hpp>
 #include <godot_cpp/variant/string.hpp>
+#define CoreBind godot
 #define GDEXTMOD_GUI_INPUT _gui_input
 #define GET_NODE_TYPE(m_parent, m_type, m_path) m_parent->get_node<m_type>(NodePath(m_path))
+#define InputClassEnums Input
 #define MODULE_OVERRIDE
 // Including the namespace helps make GDExtension code more similar to module code.
 using namespace godot;
@@ -29,6 +32,7 @@ using namespace godot;
 #define GDEXTMOD_GUI_INPUT gui_input
 #define GET_NODE_TYPE(m_parent, m_type, m_path) Object::cast_to<m_type>(m_parent->get_node(NodePath(m_path)))
 #define MODULE_OVERRIDE override
+#define MOUSE_BUTTON_LEFT MouseButton::LEFT
 
 #ifndef GODOT_VERSION_MAJOR
 // Prior to Godot 4.5, the Godot version macros were just "VERSION_*" which did not match the godot-cpp API.
@@ -36,6 +40,22 @@ using namespace godot;
 #define GODOT_VERSION_MAJOR VERSION_MAJOR
 #define GODOT_VERSION_MINOR VERSION_MINOR
 #define GODOT_VERSION_PATCH VERSION_PATCH
+#endif
+
+#if GODOT_VERSION_MAJOR > 4 || (GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR > 6)
+// In Godot 4.7, callable_mp was moved to its own header.
+#include "core/object/callable_mp.h"
+#endif
+
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 7
+// Prior to Godot 4.7, Input enums were located in the Input class,
+// but in 4.7 they were moved to a separate InputClassEnums namespace.
+#define InputClassEnums Input
+#endif
+
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 5
+// In Godot 4.5 and later, namespaces were capitalized: core_bind -> CoreBind.
+#define CoreBind core_bind
 #endif
 
 #if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR > 4
@@ -48,7 +68,6 @@ using namespace godot;
 #define Math_TAU Math::TAU
 #endif
 
-#define MOUSE_BUTTON_LEFT MouseButton::LEFT
 #else
 #error "Must build as Godot GDExtension or Godot module."
 #endif

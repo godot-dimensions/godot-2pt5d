@@ -7,6 +7,7 @@
 #include <godot_cpp/classes/input_event_screen_drag.hpp>
 #include <godot_cpp/classes/input_event_screen_touch.hpp>
 #elif GODOT_MODULE
+#include "core/input/input.h"
 #include "scene/resources/font.h"
 #endif
 
@@ -280,8 +281,8 @@ void EditorViewportRotation25D::_process_click(const int p_index, const Vector2 
 			_update_focus();
 		}
 		_orbiting_mouse_button_index = -1;
-		if (Input::get_singleton()->get_mouse_mode() == Input::MOUSE_MODE_CAPTURED) {
-			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_VISIBLE);
+		if (Input::get_singleton()->get_mouse_mode() == InputClassEnums::MOUSE_MODE_CAPTURED) {
+			Input::get_singleton()->set_mouse_mode(InputClassEnums::MOUSE_MODE_VISIBLE);
 			Input::get_singleton()->warp_mouse(_orbiting_mouse_start);
 		}
 	}
@@ -290,8 +291,8 @@ void EditorViewportRotation25D::_process_click(const int p_index, const Vector2 
 
 void EditorViewportRotation25D::_process_drag(const Ref<InputEvent> &p_event, const int p_index, const Vector2 p_position) {
 	if (_orbiting_mouse_button_index == p_index) {
-		if (Input::get_singleton()->get_mouse_mode() == Input::MOUSE_MODE_VISIBLE) {
-			Input::get_singleton()->set_mouse_mode(Input::MOUSE_MODE_CAPTURED);
+		if (Input::get_singleton()->get_mouse_mode() == InputClassEnums::MOUSE_MODE_VISIBLE) {
+			Input::get_singleton()->set_mouse_mode(InputClassEnums::MOUSE_MODE_CAPTURED);
 			_orbiting_mouse_start = p_position;
 		}
 		_editor_main_viewport_2pt5d->navigation_orbit(p_event);

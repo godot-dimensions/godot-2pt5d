@@ -3,6 +3,10 @@
 #include "editor_main_screen_25d.h"
 #include "editor_main_viewport_25d.h"
 
+#if GODOT_MODULE
+#include "core/input/input.h"
+#endif
+
 void EditorInputSurface25D::GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_event) {
 	ERR_FAIL_COND(p_event.is_null());
 	ERR_FAIL_NULL(_editor_main_screen);

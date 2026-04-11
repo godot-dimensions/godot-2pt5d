@@ -6,6 +6,11 @@
 #elif GODOT_MODULE
 #include "scene/3d/node_3d.h"
 #include "scene/main/viewport.h"
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 6
+#include "servers/rendering_server.h"
+#else
+#include "servers/rendering/rendering_server.h"
+#endif
 #endif
 
 void Node25D::_find_or_make_world() {

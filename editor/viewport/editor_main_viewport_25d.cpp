@@ -8,6 +8,7 @@
 #include <godot_cpp/classes/input_event_screen_drag.hpp>
 #include <godot_cpp/classes/world2d.hpp>
 #elif GODOT_MODULE
+#include "core/input/input.h"
 #include "scene/resources/world_2d.h"
 #endif
 
