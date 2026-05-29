@@ -82,12 +82,16 @@ void EditorMainScreen25D::_notification(int p_what) {
 		case NOTIFICATION_PROCESS: {
 			ERR_FAIL_NULL(_editor_main_viewport_2pt5d);
 			Node *edited_scene_root = EditorInterface::get_singleton()->get_edited_scene_root();
-			if (edited_scene_root == nullptr) {
-				_edited_scene_viewport = nullptr;
+			if (edited_scene_root == nullptr || !edited_scene_root->is_inside_tree()) {
+				_editor_main_viewport_2pt5d->set_edited_scene_viewport(nullptr);
 				return;
 			}
-			_edited_scene_viewport = edited_scene_root->get_viewport();
-			_editor_main_viewport_2pt5d->set_edited_scene_viewport(_edited_scene_viewport);
+			Viewport *edited_scene_viewport = edited_scene_root->get_viewport();
+			if (edited_scene_viewport == nullptr || !edited_scene_viewport->is_inside_tree()) {
+				_editor_main_viewport_2pt5d->set_edited_scene_viewport(nullptr);
+				return;
+			}
+			_editor_main_viewport_2pt5d->set_edited_scene_viewport(edited_scene_viewport);
 		} break;
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_theme();

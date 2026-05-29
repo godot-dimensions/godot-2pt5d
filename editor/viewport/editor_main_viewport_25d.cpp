@@ -60,23 +60,14 @@ PackedColorArray EditorMainViewport25D::get_axis_colors() const {
 }
 
 Basis25D EditorMainViewport25D::get_view_basis_25d() const {
-	if (_edited_scene_viewport != nullptr && _edited_scene_viewport->has_meta(StringName("world_25d"))) {
-		Ref<World25D> world = _edited_scene_viewport->get_meta(StringName("world_25d"));
-		if (world.is_valid()) {
-			return world->get_basis();
-		}
+	if (_world_25d.is_valid()) {
+		return _world_25d->get_basis();
 	}
 	return Basis25D();
 }
 
 Ref<World25D> EditorMainViewport25D::get_world_25d() const {
-	if (_edited_scene_viewport != nullptr && _edited_scene_viewport->has_meta(StringName("world_25d"))) {
-		Ref<World25D> world = _edited_scene_viewport->get_meta(StringName("world_25d"));
-		if (world.is_valid()) {
-			return world;
-		}
-	}
-	return Ref<World25D>();
+	return _world_25d;
 }
 
 void EditorMainViewport25D::selected_nodes_changed(const TypedArray<Node> &p_top_nodes) {
@@ -152,8 +143,18 @@ void EditorMainViewport25D::viewport_mouse_input(const Ref<InputEventMouse> &p_m
 }
 
 void EditorMainViewport25D::set_edited_scene_viewport(Viewport *p_edited_scene_viewport) {
-	_edited_scene_viewport = p_edited_scene_viewport;
-	_sub_viewport->set_world_2d(_edited_scene_viewport->find_world_2d());
+	_world_25d.unref();
+	if (p_edited_scene_viewport == nullptr) {
+		_viewport_rotation_2pt5d->queue_redraw();
+		return;
+	}
+	if (p_edited_scene_viewport->has_meta(StringName("world_25d"))) {
+		Ref<World25D> world = p_edited_scene_viewport->get_meta(StringName("world_25d"));
+		if (world.is_valid()) {
+			_world_25d = world;
+		}
+	}
+	_sub_viewport->set_world_2d(p_edited_scene_viewport->find_world_2d());
 	_viewport_rotation_2pt5d->queue_redraw();
 }
 

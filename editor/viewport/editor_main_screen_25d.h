@@ -32,7 +32,6 @@ private:
 	Button *_toolbar_buttons[TOOLBAR_BUTTON_MAX] = { nullptr };
 	HBoxContainer *_toolbar_hbox = nullptr;
 	EditorMainViewport25D *_editor_main_viewport_2pt5d = nullptr;
-	Viewport *_edited_scene_viewport = nullptr;
 
 	Button *_focus_selected_nodes = nullptr;
 	Button *_zoom_minus = nullptr;

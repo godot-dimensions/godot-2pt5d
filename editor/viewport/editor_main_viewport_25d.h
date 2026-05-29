@@ -27,7 +27,7 @@ private:
 	EditorMainScreen25D *_editor_main_screen_2pt5d = nullptr;
 	EditorTransformGizmo25D *_transform_gizmo_2pt5d = nullptr;
 	EditorViewportRotation25D *_viewport_rotation_2pt5d = nullptr;
-	Viewport *_edited_scene_viewport = nullptr;
+	Ref<World25D> _world_25d;
 
 	PackedColorArray _axis_colors;
 	int _zoom_level = 0;
