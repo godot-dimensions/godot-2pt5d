@@ -44,9 +44,16 @@ void Godot25DEditorPlugin::_move_2pt5d_main_screen_tab_button() const {
 	Control *editor = EditorInterface::get_singleton()->get_base_control();
 	ERR_FAIL_NULL(editor);
 	// Move 2.5D button to the left of the "3D" button, to the right of the "2D" button.
-	Node *button_asset_lib_tab = editor->find_child("AssetLib", true, false);
-	ERR_FAIL_NULL(button_asset_lib_tab);
-	Node *main_editor_button_hbox = button_asset_lib_tab->get_parent();
+	// The asset library / asset store button is probably the most unique node name to search for.
+	Node *button_asset_lib_store_tab = editor->find_child("Asset Store", true, false);
+	// The name changed from "AssetLib" to "Asset Store" in Godot 4.7.
+	// However, a version check is not appropriate here, because a GDExtension may be
+	// compiled for Godot 4.3-4.6 and used in 4.7, so we need to check for both names.
+	if (button_asset_lib_store_tab == nullptr) {
+		button_asset_lib_store_tab = editor->find_child("AssetLib", true, false);
+	}
+	ERR_FAIL_NULL(button_asset_lib_store_tab);
+	Node *main_editor_button_hbox = button_asset_lib_store_tab->get_parent();
 	Button *button_2pt5d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "2_5D");
 	Button *button_3d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "3D");
 	ERR_FAIL_NULL(button_2pt5d_tab);
