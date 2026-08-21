@@ -47,6 +47,8 @@ compile_commands.json
 *.arm32.obj
 *.arm64.obj
 *.o.obj
+# Godot's failed attempts to import Windows MSVC compilation artifacts.
+*.o.obj.import
 *.x86_32.obj
 *.x86_64.obj
 *.opensdf
