@@ -43,6 +43,14 @@ void EditorViewportRotation25D::_notification(int p_what) {
 		case NOTIFICATION_THEME_CHANGED: {
 			_update_theme();
 		} break;
+		case NOTIFICATION_WM_MOUSE_EXIT:
+		case NOTIFICATION_WM_WINDOW_FOCUS_OUT:
+		case NOTIFICATION_VP_MOUSE_EXIT: {
+			_on_mouse_exited();
+			if (Input::get_singleton()->get_mouse_mode() == InputClassEnums::MOUSE_MODE_CAPTURED) {
+				Input::get_singleton()->set_mouse_mode(InputClassEnums::MOUSE_MODE_VISIBLE);
+			}
+		} break;
 	}
 }
 
@@ -69,10 +77,11 @@ void EditorViewportRotation25D::_draw_axis_circle(const Axis2D &p_axis) {
 	const bool is_focused = _focused_axis.axis_number == p_axis.axis_number && _focused_axis.axis_type == p_axis.axis_type;
 	const Color axis_color = _axis_colors[p_axis.axis_number];
 	const float alpha = MIN(2.0f, p_axis.z_index + 2.0f);
-	const Color color = is_focused ? Color(axis_color.lightened(0.75f), 1.0f) : Color(axis_color, alpha);
+	const Color color = is_focused ? Color(axis_color.lightened(0.5f), 1.0f) : Color(axis_color, alpha);
 	const real_t axis_circle_radius = (8.0f + p_axis.z_index) * _editor_scale;
+	// Draw the base circle (both positive and negative).
+	draw_circle(p_axis.screen_point, axis_circle_radius, color, true, -1.0f, true);
 	if (p_axis.axis_type == AXIS_TYPE_CIRCLE_POSITIVE) {
-		draw_circle(p_axis.screen_point, axis_circle_radius, color, true, -1.0f, true);
 		// Draw the axis letter for the positive axes.
 		const String axis_letter = _get_axis_letter_2pt5d(p_axis.axis_number);
 		const Ref<Font> &font = get_theme_font(StringName("rotation_control"), StringName("EditorFonts"));
@@ -82,7 +91,6 @@ void EditorViewportRotation25D::_draw_axis_circle(const Axis2D &p_axis) {
 		draw_char(font, p_axis.screen_point + char_offset, axis_letter, font_size, Color(0.0f, 0.0f, 0.0f, alpha * 0.6f));
 	} else {
 		// Draw an outline around the negative axes.
-		draw_circle(p_axis.screen_point, axis_circle_radius, color, true, -1.0f, true);
 		draw_circle(p_axis.screen_point, axis_circle_radius * 0.8f, color.darkened(0.4f), true, -1.0f, true);
 	}
 }
@@ -91,7 +99,7 @@ void EditorViewportRotation25D::_draw_axis_line(const Axis2D &p_axis, const Vect
 	const bool is_focused = _focused_axis.axis_number == p_axis.axis_number && _focused_axis.axis_type == AXIS_TYPE_CIRCLE_POSITIVE;
 	const Color axis_color = _axis_colors[p_axis.axis_number];
 	const float alpha = MIN(2.0f, p_axis.z_index + 2.0f);
-	const Color color = is_focused ? Color(axis_color.lightened(0.75f), 1.0f) : Color(axis_color, alpha);
+	const Color color = is_focused ? Color(axis_color.lightened(0.5f), 1.0f) : Color(axis_color, alpha);
 	draw_line(p_center, p_axis.screen_point, color, 1.5f * _editor_scale, true);
 }
 
@@ -155,8 +163,7 @@ void EditorViewportRotation25D::_draw_filled_arc(const Vector2 &p_center, real_t
 }
 
 void EditorViewportRotation25D::_get_sorted_axis(const Vector2 &p_center, Vector<Axis2D> &r_axis) {
-	const Vector2 center = get_size() / 2.0f;
-	const real_t radius = center.x - 10.0f * _editor_scale;
+	const real_t radius = p_center.x - 10.0f * _editor_scale;
 	const Basis25D camera_basis = _editor_main_viewport_2pt5d->get_view_basis_25d();
 	// Add axes in each direction.
 	for (int i = 0; i < 3; i++) {
@@ -168,20 +175,21 @@ void EditorViewportRotation25D::_get_sorted_axis(const Vector2 &p_center, Vector
 			Axis2D axis;
 			axis.axis_type = AXIS_TYPE_CIRCLE_POSITIVE;
 			axis.axis_number = i;
-			axis.screen_point = center;
+			axis.screen_point = p_center;
+			axis.z_index = camera_basis.draw_order[i];
 			r_axis.push_back(axis);
 		} else {
 			Axis2D pos_axis;
 			pos_axis.axis_type = AXIS_TYPE_CIRCLE_POSITIVE;
 			pos_axis.axis_number = i;
-			pos_axis.screen_point = center + axis_screen_position;
+			pos_axis.screen_point = p_center + axis_screen_position;
 			pos_axis.z_index = camera_basis.draw_order[i];
 			r_axis.push_back(pos_axis);
 
 			Axis2D line_axis;
 			line_axis.axis_type = AXIS_TYPE_LINE;
 			line_axis.axis_number = i;
-			line_axis.screen_point = center + axis_screen_position;
+			line_axis.screen_point = p_center + axis_screen_position;
 			// Ensure the lines draw behind their connected circles.
 			line_axis.z_index = MIN(camera_basis.draw_order[i], 0.0f) - (float)CMP_EPSILON;
 			r_axis.push_back(line_axis);
@@ -189,26 +197,26 @@ void EditorViewportRotation25D::_get_sorted_axis(const Vector2 &p_center, Vector
 			Axis2D neg_axis;
 			neg_axis.axis_type = AXIS_TYPE_CIRCLE_NEGATIVE;
 			neg_axis.axis_number = i;
-			neg_axis.screen_point = center - axis_screen_position;
+			neg_axis.screen_point = p_center - axis_screen_position;
 			neg_axis.z_index = -camera_basis.draw_order[i];
 			r_axis.push_back(neg_axis);
 		}
 	}
 	// Add special cases to the corners for Isometric, Dimetric, Trimetric, and From Angle.
 	{
-		const real_t special_pos = center.x - 6.0f * _editor_scale;
+		const real_t special_pos = p_center.x - 6.0f * _editor_scale;
 		Axis2D special_axis;
 		special_axis.axis_type = AXIS_TYPE_SPECIAL;
-		special_axis.screen_point = center + Vector2(special_pos, -special_pos);
+		special_axis.screen_point = p_center + Vector2(special_pos, -special_pos);
 		special_axis.axis_number = 0;
 		r_axis.push_back(special_axis);
-		special_axis.screen_point = center + Vector2(special_pos, special_pos);
+		special_axis.screen_point = p_center + Vector2(special_pos, special_pos);
 		special_axis.axis_number = 1;
 		r_axis.push_back(special_axis);
-		special_axis.screen_point = center + Vector2(-special_pos, special_pos);
+		special_axis.screen_point = p_center + Vector2(-special_pos, special_pos);
 		special_axis.axis_number = 2;
 		r_axis.push_back(special_axis);
-		special_axis.screen_point = center + Vector2(-special_pos, -special_pos);
+		special_axis.screen_point = p_center + Vector2(-special_pos, -special_pos);
 		special_axis.axis_number = 3;
 		r_axis.push_back(special_axis);
 	}
@@ -346,12 +354,12 @@ void EditorViewportRotation25D::GDEXTMOD_GUI_INPUT(const Ref<InputEvent> &p_even
 	const Ref<InputEventMouseButton> mb = p_event;
 	if (mb.is_valid() && mb->get_button_index() == MOUSE_BUTTON_LEFT) {
 		const bool modifier = mb->is_shift_pressed() || mb->is_ctrl_pressed() || mb->is_meta_pressed() || mb->is_alt_pressed();
-		_process_click(100, mb->get_position(), mb->is_pressed(), modifier);
+		_process_click(MOUSE_SENTINEL_INDEX, mb->get_position(), mb->is_pressed(), modifier);
 	}
 
 	const Ref<InputEventMouseMotion> mm = p_event;
 	if (mm.is_valid()) {
-		_process_drag(mm, 100, mm->get_global_position());
+		_process_drag(mm, MOUSE_SENTINEL_INDEX, mm->get_global_position());
 	}
 
 	// Touch events

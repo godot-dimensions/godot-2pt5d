@@ -2,11 +2,13 @@
 
 #include "editor_viewport_2pt5d_defines.h"
 
-// Editor viewport rotation navigation gizmo (the thing in the top right corner).
+// Editor viewport rotation navigation widget (the thing in the top right corner).
 // Shows the current view rotation and allows the user to rotate the view.
 // Users can drag to spin like a ball, or click on an axis to make that perpendicular to the view.
 class EditorViewportRotation25D : public Control {
 	GDCLASS(EditorViewportRotation25D, Control);
+
+	static constexpr int MOUSE_SENTINEL_INDEX = 100; // Distinguish from touch events.
 
 	enum AxisType2D {
 		AXIS_TYPE_CIRCLE_POSITIVE,
