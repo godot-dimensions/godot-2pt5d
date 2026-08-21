@@ -1,7 +1,6 @@
 #include "line_25d.h"
 
 void Line25D::_notification(int p_what) {
-	Node25D::_notification(p_what);
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE:
 		case NOTIFICATION_PROCESS: {

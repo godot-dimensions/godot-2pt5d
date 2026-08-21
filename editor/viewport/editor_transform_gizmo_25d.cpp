@@ -450,7 +450,6 @@ void EditorTransformGizmo25D::_process_transform(const Vector2 &p_local_position
 }
 
 void EditorTransformGizmo25D::_notification(int p_what) {
-	Node25D::_notification(p_what);
 	switch (p_what) {
 		case NOTIFICATION_PROCESS: {
 			_update_gizmo_line_transform();
