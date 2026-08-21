@@ -241,12 +241,14 @@ void Node25D::set_global_transform_3d(const Transform3D &p_transform) {
 		const Node25D *node_25d_parent = Object::cast_to<Node25D>(parent);
 		if (node_25d_parent) {
 			const Transform3D parent_transform = node_25d_parent->get_global_transform_3d();
+			ERR_FAIL_COND_MSG(parent_transform.basis.determinant() == 0.0f, "Failed to set global transform of the '" + get_name() + "' Node25D because its parent '" + node_25d_parent->get_name() + "' has a zero determinant basis, which is non-invertible.");
 			set_transform_3d(parent_transform.affine_inverse() * p_transform);
 			return;
 		} else {
 			const Node3D *node_3d_parent = Object::cast_to<Node3D>(parent);
 			if (node_3d_parent) {
 				const Transform3D parent_transform = node_3d_parent->get_global_transform();
+				ERR_FAIL_COND_MSG(parent_transform.basis.determinant() == 0.0f, "Failed to set global transform of the '" + get_name() + "' Node25D because its parent '" + node_3d_parent->get_name() + "' has a zero determinant basis, which is non-invertible.");
 				set_transform_3d(parent_transform.affine_inverse() * p_transform);
 				return;
 			}
