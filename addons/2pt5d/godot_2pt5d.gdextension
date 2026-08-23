@@ -2,7 +2,6 @@
 
 entry_symbol = "godot_2pt5d_library_init"
 compatibility_minimum = 4.3
-reloadable = true
 
 [libraries]
 

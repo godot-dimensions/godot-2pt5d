@@ -9,6 +9,9 @@ GDExtensionBool GDE_EXPORT godot_2pt5d_library_init(GDExtensionInterfaceGetProcA
 
 	init_obj.register_initializer(initialize_2pt5d_module);
 	init_obj.register_terminator(uninitialize_2pt5d_module);
+	// Setting this to SCENE enables reloading, but prevents using CORE or SERVERS initialization levels.
+	// Reloading won't actually happen unless the user sets `reloadable = true` in the .gdextension file,
+	// but still, the extension's code fully supports reloading if the user wants to enable it.
 	init_obj.set_minimum_library_initialization_level(MODULE_INITIALIZATION_LEVEL_SCENE);
 
 	return init_obj.init();
