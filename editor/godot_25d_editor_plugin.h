@@ -36,10 +36,13 @@ protected:
 class Godot25DEditorPlugin : public EditorPlugin {
 	GDCLASS(Godot25DEditorPlugin, EditorPlugin);
 	EditorMainScreen25D *_main_screen = nullptr;
+	EditorCreate25DSceneButton *_create_2pt5d_scene_button = nullptr;
 
 	Button *_find_button_by_text_2pt5d(Node *p_start, const String &p_text);
+	void _remove_2pt5d_main_screen();
 	void _move_2pt5d_main_screen_tab_button() const;
 	void _inject_2pt5d_scene_button();
+	void _remove_2pt5d_scene_button();
 	void _create_2pt5d_scene();
 
 protected:
