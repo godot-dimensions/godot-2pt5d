@@ -10,14 +10,24 @@ env_25d.add_source_files(env.modules_sources, "icons/*.cpp")
 env_25d.add_source_files(env.modules_sources, "viewport/*.cpp")
 
 # The rest of this file handles generating the 2.5D icons header file.
-import icons.editor_2pt5d_icon_generator
+import importlib.util
+import os
+import sys
 
-env["BUILDERS"]["MakeEditor25DIconsBuilder"] = Builder(
-    action=env.Run(icons.editor_2pt5d_icon_generator.make_editor_2pt5d_icons_action),
+header_builders_path = os.path.abspath(
+    os.path.join("../addons/2pt5d/src/header_builders.py")
+)
+spec = importlib.util.spec_from_file_location("header_builders", header_builders_path)
+header_builders = importlib.util.module_from_spec(spec)
+sys.modules["header_builders"] = header_builders
+spec.loader.exec_module(header_builders)
+
+env["BUILDERS"]["MakeSVGIconsBuilder"] = Builder(
+    action=env.Run(header_builders.make_svg_icons_action),
     suffix=".h",
     src_suffix=".svg",
 )
 
 target_file_path = "icons/editor_2pt5d_icons.gen.h"
 icon_sources = Glob("../addons/2pt5d/icons/25D.svg") + Glob("../addons/2pt5d/icons/Node25D.svg")
-env.Alias("editor_2pt5d_icons", [env.MakeEditor25DIconsBuilder(target_file_path, icon_sources)])
+env.Alias("editor_2pt5d_icons", [env.MakeSVGIconsBuilder(target_file_path, icon_sources)])
