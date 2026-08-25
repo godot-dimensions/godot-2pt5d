@@ -39,6 +39,7 @@ class Godot25DEditorPlugin : public EditorPlugin {
 	EditorCreate25DSceneButton *_create_2pt5d_scene_button = nullptr;
 
 	Button *_find_button_by_text_2pt5d(Node *p_start, const String &p_text);
+	void _add_2pt5d_main_screen();
 	void _remove_2pt5d_main_screen();
 	void _move_2pt5d_main_screen_tab_button() const;
 	void _inject_2pt5d_scene_button();

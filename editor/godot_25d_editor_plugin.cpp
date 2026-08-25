@@ -8,10 +8,20 @@
 #include <godot_cpp/classes/editor_selection.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
 #include <godot_cpp/classes/window.hpp>
+
+#if GODOT_VERSION_MAJOR > 4 || (GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR >= 8)
+// In Godot 4.8 and later, main screens are docks, so we need to interact with the dock system.
+#include <godot_cpp/classes/editor_dock.hpp>
+#endif
 #elif GODOT_MODULE
 #include "editor/editor_data.h"
 #include "editor/editor_interface.h"
 #include "scene/main/window.h"
+
+#if GODOT_VERSION_MAJOR > 4 || (GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR >= 8)
+// In Godot 4.8 and later, main screens are docks, so we need to interact with the dock system.
+#include "editor/docks/editor_dock.h"
+#endif
 
 #if VERSION_HEX < 0x040400
 #define set_button_icon set_icon
@@ -40,6 +50,18 @@ void EditorCreate25DSceneButton::_notification(int p_what) {
 	}
 }
 
+void Godot25DEditorPlugin::_add_2pt5d_main_screen() {
+	Control *godot_editor_main_screen = EditorInterface::get_singleton()->get_editor_main_screen();
+	if (godot_editor_main_screen->has_node(NodePath("EditorMainScreen25D"))) {
+		_main_screen = GET_NODE_TYPE(godot_editor_main_screen, EditorMainScreen25D, "EditorMainScreen25D");
+		ERR_PRINT("EditorMainScreen25D already exists.");
+	} else {
+		_main_screen = memnew(EditorMainScreen25D);
+		_main_screen->setup(get_undo_redo());
+		godot_editor_main_screen->add_child(_main_screen);
+	}
+}
+
 void Godot25DEditorPlugin::_remove_2pt5d_main_screen() {
 	if (_main_screen == nullptr) {
 		return;
@@ -55,6 +77,8 @@ void Godot25DEditorPlugin::_remove_2pt5d_main_screen() {
 }
 
 void Godot25DEditorPlugin::_move_2pt5d_main_screen_tab_button() const {
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 8
+	// Prior to Godot 4.8, each main screen had a Button in an HBoxContainer in the title bar.
 	Control *editor = EditorInterface::get_singleton()->get_base_control();
 	ERR_FAIL_NULL(editor);
 	// Move 2.5D button to the left of the "3D" button, to the right of the "2D" button.
@@ -68,11 +92,40 @@ void Godot25DEditorPlugin::_move_2pt5d_main_screen_tab_button() const {
 	}
 	ERR_FAIL_NULL(button_asset_lib_store_tab);
 	Node *main_editor_button_hbox = button_asset_lib_store_tab->get_parent();
+	// Check that the buttons exist before getting them, and bail out without printing
+	// any errors if they don't. A GDExtension compiled for Godot 4.3-4.7 may be used in
+	// Godot 4.8 or later, where main screens are docks instead of buttons in an HBoxContainer.
+	if (!main_editor_button_hbox->has_node(NodePath("2_5D")) || !main_editor_button_hbox->has_node(NodePath("3D"))) {
+		return;
+	}
 	Button *button_2pt5d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "2_5D");
 	Button *button_3d_tab = GET_NODE_TYPE(main_editor_button_hbox, Button, "3D");
-	ERR_FAIL_NULL(button_2pt5d_tab);
-	ERR_FAIL_NULL(button_3d_tab);
+	if (button_2pt5d_tab == nullptr || button_3d_tab == nullptr) {
+		return;
+	}
 	main_editor_button_hbox->move_child(button_2pt5d_tab, button_3d_tab->get_index());
+#else
+	// In Godot 4.8 and later, each main screen is an EditorDock in the main screen's
+	// DockTabContainer, and the tabs are ordered by the order of the dock nodes.
+	EditorInterface *editor_interface = EditorInterface::get_singleton();
+	ERR_FAIL_NULL(editor_interface);
+	// Move 2.5D tab to the left of the "3D" tab, to the right of the "2D" tab.
+	// Unlike the node name of the old button, the dock name has a dot in it.
+	EditorDock *dock_2pt5d = editor_interface->get_dock_by_name("2.5D");
+	EditorDock *dock_3d = editor_interface->get_dock_by_name("3D");
+	ERR_FAIL_NULL(dock_2pt5d);
+	ERR_FAIL_NULL(dock_3d);
+	Node *main_screen_docks = dock_2pt5d->get_parent();
+	if (main_screen_docks == nullptr || main_screen_docks != dock_3d->get_parent()) {
+		// The docks are not side by side, perhaps because the user moved one of them
+		// somewhere else or closed it, so there is no sensible way to reorder them.
+		return;
+	}
+	// Block signals to avoid changing the selected main screen while the editor is still starting up.
+	main_screen_docks->set_block_signals(true);
+	main_screen_docks->move_child(dock_2pt5d, dock_3d->get_index(false));
+	main_screen_docks->set_block_signals(false);
+#endif
 }
 
 void Godot25DEditorPlugin::_inject_2pt5d_scene_button() {
@@ -128,6 +181,7 @@ void Godot25DEditorPlugin::_create_2pt5d_scene() {
 void Godot25DEditorPlugin::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_ENTER_TREE: {
+			_add_2pt5d_main_screen();
 			_move_2pt5d_main_screen_tab_button();
 			call_deferred(StringName("_inject_2pt5d_scene_button"));
 		} break;
@@ -164,12 +218,4 @@ void Godot25DEditorPlugin::_bind_methods() {
 
 Godot25DEditorPlugin::Godot25DEditorPlugin() {
 	set_name(StringName("Godot25DEditorPlugin"));
-	Control *godot_editor_main_screen = EditorInterface::get_singleton()->get_editor_main_screen();
-	if (godot_editor_main_screen->has_node(NodePath("EditorMainScreen25D"))) {
-		_main_screen = GET_NODE_TYPE(godot_editor_main_screen, EditorMainScreen25D, "EditorMainScreen25D");
-	} else {
-		_main_screen = memnew(EditorMainScreen25D);
-		_main_screen->setup(get_undo_redo());
-		godot_editor_main_screen->add_child(_main_screen);
-	}
 }
