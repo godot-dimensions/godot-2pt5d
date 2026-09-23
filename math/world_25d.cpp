@@ -107,35 +107,31 @@ Ref<World25D> World25D::from_preset(const Basis25DPreset p_preset, const real_t 
 	return world;
 }
 
-void World25D::_get_property_list(List<PropertyInfo> *p_list) const {
-	for (List<PropertyInfo>::Element *E = p_list->front(); E; E = E->next()) {
-		PropertyInfo &prop = E->get();
-		if (prop.name == StringName("basis_angle")) {
-			switch (_basis_preset) {
-				case PRESET_FROM_ANGLE:
-				case PRESET_DIMETRIC:
-				case PRESET_TRIMETRIC: {
-					prop.usage = PROPERTY_USAGE_DEFAULT;
-				} break;
-				default: {
-					prop.usage = PROPERTY_USAGE_NONE;
-				} break;
-			}
-		} else if (prop.name == StringName("basis_angle_z")) {
-			prop.usage = (_basis_preset == PRESET_TRIMETRIC) ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis")) {
-			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_STORAGE : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis_x")) {
-			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis_y")) {
-			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis_z")) {
-			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis_draw_order")) {
-			prop.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+void World25D::_validate_property(PropertyInfo &p_property) const {
+	if (p_property.name == StringName("basis_angle")) {
+		switch (_basis_preset) {
+			case PRESET_FROM_ANGLE:
+			case PRESET_DIMETRIC:
+			case PRESET_TRIMETRIC: {
+				p_property.usage = PROPERTY_USAGE_DEFAULT;
+			} break;
+			default: {
+				p_property.usage = PROPERTY_USAGE_NONE;
+			} break;
 		}
+	} else if (p_property.name == StringName("basis_angle_z")) {
+		p_property.usage = (_basis_preset == PRESET_TRIMETRIC) ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis")) {
+		p_property.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_STORAGE : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis_x")) {
+		p_property.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis_y")) {
+		p_property.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis_z")) {
+		p_property.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis_draw_order")) {
+		p_property.usage = (_basis_preset == PRESET_CUSTOM) ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
 	}
-	Resource::_get_property_list(p_list);
 }
 
 void World25D::_bind_methods() {

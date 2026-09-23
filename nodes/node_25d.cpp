@@ -102,32 +102,28 @@ void Node25D::_notification(int p_what) {
 	}
 }
 
-void Node25D::_get_property_list(List<PropertyInfo> *p_list) const {
-	for (List<PropertyInfo>::Element *E = p_list->front(); E; E = E->next()) {
-		PropertyInfo &prop = E->get();
-		if (prop.name == StringName("world")) {
-			const Node25D *parent_25d = Object::cast_to<Node25D>(get_parent());
-			if (parent_25d && parent_25d->get_world_25d() == _world_25d) {
-				// If the parent has the same world, don't save this node's world into the tscn file.
-				prop.usage = PROPERTY_USAGE_EDITOR;
-			}
-		} else if (prop.name == StringName("local_rotation_2d")) {
-			prop.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_2D_ANGLE ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("basis_3d")) {
-			if (_rotation_edit_mode == ROTATION_EDIT_MODE_3D_BASIS) {
-				prop.usage = PROPERTY_USAGE_DEFAULT;
-			} else if (_rotation_edit_mode == ROTATION_EDIT_MODE_2D_ANGLE) {
-				prop.usage = PROPERTY_USAGE_STORAGE;
-			} else {
-				prop.usage = PROPERTY_USAGE_NONE;
-			}
-		} else if (prop.name == StringName("euler_3d")) {
-			prop.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_3D_EULER ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
-		} else if (prop.name == StringName("quaternion_3d")) {
-			prop.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_3D_QUATERNION ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
+void Node25D::_validate_property(PropertyInfo &p_property) const {
+	if (p_property.name == StringName("world")) {
+		const Node25D *parent_25d = Object::cast_to<Node25D>(get_parent());
+		if (parent_25d && parent_25d->get_world_25d() == _world_25d) {
+			// If the parent has the same world, don't save this node's world into the tscn file.
+			p_property.usage = PROPERTY_USAGE_EDITOR;
 		}
+	} else if (p_property.name == StringName("local_rotation_2d")) {
+		p_property.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_2D_ANGLE ? PROPERTY_USAGE_EDITOR : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("basis_3d")) {
+		if (_rotation_edit_mode == ROTATION_EDIT_MODE_3D_BASIS) {
+			p_property.usage = PROPERTY_USAGE_DEFAULT;
+		} else if (_rotation_edit_mode == ROTATION_EDIT_MODE_2D_ANGLE) {
+			p_property.usage = PROPERTY_USAGE_STORAGE;
+		} else {
+			p_property.usage = PROPERTY_USAGE_NONE;
+		}
+	} else if (p_property.name == StringName("euler_3d")) {
+		p_property.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_3D_EULER ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
+	} else if (p_property.name == StringName("quaternion_3d")) {
+		p_property.usage = _rotation_edit_mode == ROTATION_EDIT_MODE_3D_QUATERNION ? PROPERTY_USAGE_DEFAULT : PROPERTY_USAGE_NONE;
 	}
-	CanvasItem::_get_property_list(p_list);
 }
 
 #ifdef TOOLS_ENABLED
