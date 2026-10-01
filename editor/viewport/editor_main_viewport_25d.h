@@ -33,7 +33,6 @@ private:
 	int _zoom_level = 0;
 
 	Vector2 _get_warped_mouse_motion(const Ref<InputEvent> &p_input_event) const;
-	void _on_button_toggled(const bool p_toggled_on, const int p_option);
 	void _update_theme();
 
 protected:

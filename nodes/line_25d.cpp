@@ -71,8 +71,8 @@ PackedVector3Array Line25D::get_points_3d() const {
 	return _points_3d;
 }
 
-void Line25D::set_points_3d(const PackedVector3Array &p_points) {
-	_points_3d = p_points;
+void Line25D::set_points_3d(const PackedVector3Array &p_points_3d) {
+	_points_3d = p_points_3d;
 	update_points_2d();
 }
 

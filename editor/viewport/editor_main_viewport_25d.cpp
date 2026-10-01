@@ -12,6 +12,8 @@
 #include "scene/resources/world_2d.h"
 #endif
 
+constexpr double TWELFTH_ROOT_OF_TWO = 1.05946309435929526456;
+
 Vector2 EditorMainViewport25D::_get_warped_mouse_motion(const Ref<InputEvent> &p_input_event) const {
 	Ref<InputEventMouseMotion> ev_mouse_motion = p_input_event;
 	if (ev_mouse_motion.is_valid()) {
@@ -117,7 +119,6 @@ void EditorMainViewport25D::navigation_pan(const Ref<InputEvent> &p_input_event)
 
 void EditorMainViewport25D::navigation_change_zoom_level(const int p_zoom_level_change, const Vector2 &p_mouse_offset) {
 	_zoom_level += p_zoom_level_change;
-	constexpr double TWELFTH_ROOT_OF_TWO = 1.05946309435929526456;
 	const double zoom = Math::pow(TWELFTH_ROOT_OF_TWO, _zoom_level);
 	const Vector2 prev_zoom = _camera_2pt5d->get_zoom();
 	const Vector2 new_zoom = Vector2(zoom, zoom);
@@ -132,6 +133,10 @@ void EditorMainViewport25D::navigation_change_zoom_level(const int p_zoom_level_
 
 void EditorMainViewport25D::navigation_reset_zoom_level() {
 	EditorMainViewport25D::navigation_change_zoom_level(-_zoom_level);
+}
+
+double EditorMainViewport25D::navigation_get_zoom_amount() const {
+	return Math::pow(TWELFTH_ROOT_OF_TWO, _zoom_level);
 }
 
 void EditorMainViewport25D::viewport_mouse_input(const Ref<InputEventMouse> &p_mouse_event) {
@@ -158,8 +163,8 @@ void EditorMainViewport25D::set_edited_scene_viewport(Viewport *p_edited_scene_v
 	_viewport_rotation_2pt5d->queue_redraw();
 }
 
-void EditorMainViewport25D::set_gizmo_mode(const int p_mode) {
-	_transform_gizmo_2pt5d->set_gizmo_mode((EditorTransformGizmo25D::GizmoMode)p_mode);
+void EditorMainViewport25D::set_gizmo_mode(const int p_gizmo_mode) {
+	_transform_gizmo_2pt5d->set_gizmo_mode((EditorTransformGizmo25D::GizmoMode)p_gizmo_mode);
 }
 
 void EditorMainViewport25D::set_use_local_transform(const bool p_use_local_transform) {

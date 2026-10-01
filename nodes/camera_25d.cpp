@@ -64,12 +64,12 @@ Vector3 Camera25D::viewport_to_world_3d(const Vector2 &p_viewport_point) const {
 	return world->xform_inv_2d_to_3d(world_point);
 }
 
-Vector2 Camera25D::world_to_viewport_3d(const Vector3 &p_global_point) const {
+Vector2 Camera25D::world_to_viewport_3d(const Vector3 &p_global_world_point) const {
 	const Ref<World25D> &world = get_world_25d();
 	if (world.is_null()) {
 		return Vector2();
 	}
-	const Vector2 world_point_2d = world->xform_3d_to_2d(p_global_point);
+	const Vector2 world_point_2d = world->xform_3d_to_2d(p_global_world_point);
 	return world_to_viewport_2d(world_point_2d);
 }
 
@@ -90,9 +90,9 @@ void Camera25D::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_zoom", "zoom"), &Camera25D::set_zoom);
 	ADD_PROPERTY(PropertyInfo(Variant::VECTOR2, "zoom", PROPERTY_HINT_LINK), "set_zoom", "get_zoom");
 
-	ClassDB::bind_method(D_METHOD("viewport_to_world_2d", "point"), &Camera25D::viewport_to_world_2d);
-	ClassDB::bind_method(D_METHOD("world_to_viewport_2d", "point"), &Camera25D::world_to_viewport_2d);
+	ClassDB::bind_method(D_METHOD("viewport_to_world_2d", "viewport_point"), &Camera25D::viewport_to_world_2d);
+	ClassDB::bind_method(D_METHOD("world_to_viewport_2d", "global_world_point"), &Camera25D::world_to_viewport_2d);
 
-	ClassDB::bind_method(D_METHOD("viewport_to_world_3d", "point"), &Camera25D::viewport_to_world_3d);
-	ClassDB::bind_method(D_METHOD("world_to_viewport_3d", "point"), &Camera25D::world_to_viewport_3d);
+	ClassDB::bind_method(D_METHOD("viewport_to_world_3d", "viewport_point"), &Camera25D::viewport_to_world_3d);
+	ClassDB::bind_method(D_METHOD("world_to_viewport_3d", "global_world_point"), &Camera25D::world_to_viewport_3d);
 }
