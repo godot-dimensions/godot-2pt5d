@@ -56,6 +56,9 @@ private:
 	void _generate_gizmo_lines(const PackedColorArray &p_axis_colors);
 
 	// Misc internal functions.
+	static Vector2 _get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_segment_a, const Vector2 &p_segment_b);
+	static real_t _distance_2d_to_line_2d_segment(const Line2D *p_line_2d, const Vector2 &p_point);
+	static real_t _distance_2d_to_line_25d_segment(const Line25D *p_line_25d, const Vector2 &p_point);
 	void _on_editor_inspector_property_edited(const String &p_prop);
 	void _on_undo_redo_version_changed();
 	void _update_gizmo_transform();

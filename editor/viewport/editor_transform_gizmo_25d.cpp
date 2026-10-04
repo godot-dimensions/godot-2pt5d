@@ -171,7 +171,7 @@ bool EditorTransformGizmo25D::_should_use_3d_rotation() const {
 	return false;
 }
 
-Vector2 _get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_segment_a, const Vector2 &p_segment_b) {
+Vector2 EditorTransformGizmo25D::_get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_segment_a, const Vector2 &p_segment_b) {
 	const Vector2 relative_point = p_point - p_segment_a;
 	const Vector2 segment_displacement = p_segment_b - p_segment_a;
 	const real_t length_sq = segment_displacement.length_squared();
@@ -185,7 +185,7 @@ Vector2 _get_closest_point_to_segment(const Vector2 &p_point, const Vector2 &p_s
 	}
 }
 
-real_t _distance_2d_to_line_2d_segment(const Line2D *p_line_2d, const Vector2 &p_point) {
+real_t EditorTransformGizmo25D::_distance_2d_to_line_2d_segment(const Line2D *p_line_2d, const Vector2 &p_point) {
 	const PackedVector2Array line_points = p_line_2d->get_points();
 	const Vector2 point = p_point / EDSCALE;
 	real_t closest_distance = INFINITY;
@@ -198,7 +198,7 @@ real_t _distance_2d_to_line_2d_segment(const Line2D *p_line_2d, const Vector2 &p
 	return closest_distance;
 }
 
-real_t _distance_2d_to_line_25d_segment(const Line25D *p_line_25d, const Vector2 &p_point) {
+real_t EditorTransformGizmo25D::_distance_2d_to_line_25d_segment(const Line25D *p_line_25d, const Vector2 &p_point) {
 	const PackedVector2Array line_points = p_line_25d->get_line_2d()->get_points();
 	real_t closest_distance = INFINITY;
 	for (int i = 0; i < line_points.size() - 1; i++) {

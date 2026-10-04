@@ -41,6 +41,7 @@ class EditorViewportRotation25D : public Control {
 	void _draw_axis_line(const Axis2D &p_axis, const Vector2 &p_center);
 	void _draw_axis_special(const Axis2D &p_axis);
 	void _draw_filled_arc(const Vector2 &p_center, const real_t p_radius, const real_t p_start_angle, const real_t p_end_angle, const Color &p_color);
+	static String _get_axis_letter(const int p_axis);
 	void _get_sorted_axis(const Vector2 &p_center, Vector<Axis2D> &r_axis);
 	void _on_mouse_exited();
 	void _process_click(const int p_index, const Vector2 p_position, const bool p_pressed, const bool p_modifier);
