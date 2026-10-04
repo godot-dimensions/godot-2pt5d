@@ -9,7 +9,7 @@
 #include <godot_cpp/classes/editor_selection.hpp>
 #include <godot_cpp/classes/v_separator.hpp>
 
-#if GODOT_VERSION < 0x040500
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 5
 #define get_top_selected_nodes get_transformable_selected_nodes
 #endif // GODOT_VERSION
 #elif GODOT_MODULE
@@ -18,11 +18,11 @@
 #include "scene/gui/separator.h"
 
 // See https://github.com/godotengine/godot/pull/99897
-#if VERSION_HEX < 0x040500
+#if GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR < 5
 #define get_top_selected_nodes get_selected_node_list
 #else
 #define get_top_selected_nodes get_top_selected_node_list
-#endif // VERSION_HEX
+#endif // GODOT_VERSION
 #endif
 
 void EditorMainScreen25D::_on_button_toggled(const bool p_toggled_on, const int p_option) {
