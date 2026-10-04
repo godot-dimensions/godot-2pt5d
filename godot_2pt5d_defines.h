@@ -72,6 +72,30 @@ using namespace godot;
 #error "Must build as Godot GDExtension or Godot module."
 #endif
 
+#ifndef ABS
+#define ABS Math::abs
+#endif // ABS
+
+#ifndef Math_E
+#define Math_E Math::E
+#endif // Math_E
+
+#ifndef Math_PI
+#define Math_PI Math::PI
+#endif // Math_PI
+
+#ifndef Math_SQRT12
+#define Math_SQRT12 Math::SQRT12
+#endif // Math_SQRT12
+
+#ifndef Math_SQRT2
+#define Math_SQRT2 Math::SQRT2
+#endif // Math_SQRT2
+
+#ifndef Math_TAU
+#define Math_TAU Math::TAU
+#endif // Math_TAU
+
 #ifndef _NO_DISCARD_
 #define _NO_DISCARD_ [[nodiscard]]
 #endif // _NO_DISCARD_
