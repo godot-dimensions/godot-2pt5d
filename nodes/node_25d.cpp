@@ -126,7 +126,7 @@ void Node25D::_validate_property(PropertyInfo &p_property) const {
 	}
 }
 
-#ifdef TOOLS_ENABLED
+#ifdef CANVAS_ITEM_EDIT_ENABLED
 Dictionary Node25D::_edit_get_state() const {
 	Dictionary state;
 	state["position"] = get_local_position_2d();
@@ -176,7 +176,7 @@ bool Node25D::_edit_use_rotation() const {
 }
 
 void Node25D::_edit_set_rect(const Rect2 &p_edit_rect) {}
-#endif // TOOLS_ENABLED
+#endif // CANVAS_ITEM_EDIT_ENABLED
 
 Transform2D Node25D::get_transform() const {
 	ERR_FAIL_COND_V_MSG(_world_25d.is_null(), Transform2D(), "Node25D must have a World25D to calculate 2D transform.");

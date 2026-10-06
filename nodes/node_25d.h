@@ -42,7 +42,7 @@ protected:
 	void _validate_property(PropertyInfo &p_property) const;
 
 public:
-#ifdef TOOLS_ENABLED
+#ifdef CANVAS_ITEM_EDIT_ENABLED
 	virtual Dictionary _edit_get_state() const MODULE_OVERRIDE;
 	virtual void _edit_set_state(const Dictionary &p_state) MODULE_OVERRIDE;
 
@@ -57,7 +57,7 @@ public:
 	virtual bool _edit_use_rotation() const MODULE_OVERRIDE;
 
 	virtual void _edit_set_rect(const Rect2 &p_edit_rect) MODULE_OVERRIDE;
-#endif
+#endif // CANVAS_ITEM_EDIT_ENABLED
 
 	Transform2D get_transform() const MODULE_OVERRIDE;
 

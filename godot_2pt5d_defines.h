@@ -23,6 +23,9 @@
 #define GET_NODE_TYPE(m_parent, m_type, m_path) m_parent->get_node<m_type>(NodePath(m_path))
 #define InputClassEnums Input
 #define MODULE_OVERRIDE
+#ifdef TOOLS_ENABLED
+#define CANVAS_ITEM_EDIT_ENABLED 1
+#endif
 // Including the namespace helps make GDExtension code more similar to module code.
 using namespace godot;
 #elif GODOT_MODULE
@@ -66,6 +69,16 @@ using namespace godot;
 #define Math_SQRT12 Math::SQRT12
 #define Math_SQRT2 Math::SQRT2
 #define Math_TAU Math::TAU
+#endif
+
+#if GODOT_VERSION_MAJOR > 4 || (GODOT_VERSION_MAJOR == 4 && GODOT_VERSION_MINOR > 7)
+// In Godot 4.8 and later, CanvasItem's `_edit_*` functions exist in all debug builds, not only in editor builds.
+// See https://github.com/godotengine/godot/pull/122510 for details.
+#ifdef DEBUG_ENABLED
+#define CANVAS_ITEM_EDIT_ENABLED 1
+#endif
+#elif defined(TOOLS_ENABLED)
+#define CANVAS_ITEM_EDIT_ENABLED 1
 #endif
 
 #else
