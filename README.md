@@ -36,6 +36,17 @@ scons
 
 It should now be successfully compiled, and you can run the executable in the `bin` folder.
 
+## Versions
+
+This repo can be compiled either as an engine module or a GDExtension.
+Most editor features only work as a module, so the module is highly recommended.
+The GDExtension version is provided on a best-effort basis, and supports
+all runtime features but limited editor functionality.
+
+This repo only supports Godot 4.4 and later. Godot 2.5D formerly supported
+[Godot 4.3](https://github.com/godot-dimensions/godot-2pt5d/releases/tag/last-4.3-commit),
+but this was discontinued.
+
 ## License
 
 This repo is free and open source software licensed under The Unlicense.
